@@ -70,13 +70,13 @@ namespace LexemsAnalyzer
             new Identifier("end","end of calculation part"),
             new Identifier("var","variables declaration"),
             new Identifier("logical","variables type"),
-            new Identifier("and","binary operator"),
-            new Identifier("or","binary operator"),
+            new Identifier("and","binary operator AND"),
+            new Identifier("or","binary operator OR"),
             new Identifier("while", "\"while\" header"),
             new Identifier("do" , "start of \"while\" block"),
             new Identifier("end_while" , "end of \"while\" block"),
-            new Identifier("not" , "unary operator"),
-            new Identifier("imp" , "binary operator"),
+            new Identifier("not" , "unary operator NOT"),
+            new Identifier("imp" , "binary operator IMP"),
             new Identifier("write" , "function name"),
             new Identifier("read" , "function name"),
             new Identifier(":" , "colon"),
@@ -105,6 +105,7 @@ namespace LexemsAnalyzer
             catch (Exception ex)
             {
                 CurrentLexems.Clear();
+                Console.WriteLine(ex.Message);
                 return false;
             }
             return true;
@@ -120,8 +121,8 @@ namespace LexemsAnalyzer
                 }
                 catch(KeyNotFoundException e)
                 {
-                    Console.WriteLine("Неопознанный символ : " + CurrentSymbol +
-                        " в строке " + LineCounter + " и столбце " + ColumnCounter);
+                    Console.WriteLine("Неопознанный символ : " + "\'" + CurrentSymbol + "\'" +
+                        " в строке " + (LineCounter + 1) + " и столбце " + (ColumnCounter + 1));
                     return false;
                 }
                 catch (Exception e)
@@ -153,8 +154,8 @@ namespace LexemsAnalyzer
                         if(lexem.Value.Length > 12)
                         {
                             Lexem = lexem.Value;
-                            throw new Exception("Слишком длинное название для переменной " + Lexem + " в строке " + LineCounter 
-                                + " и столбце" + ColumnCounter);
+                            throw new Exception("Слишком длинное название для переменной " + Lexem + " в строке " + (LineCounter 
+                                + 1) + " и столбце " + (ColumnCounter + 1));
                         }
                         if(lexem.Value.Length > 0)
                             lexem.Type = "<variable>";
@@ -203,7 +204,7 @@ namespace LexemsAnalyzer
                 {
                     IsWrongSyntax = false;
                     if (Lexem != "end_while")
-                        throw new Exception("Неправильное использование символа \'_\' в строке " + LineCounter + " и столбце" + ColumnCounter);
+                        throw new Exception("Неправильное использование символа \'_\' в строке " + (LineCounter + 1) + " и столбце " + (ColumnCounter + 1));
                 }
 
 
