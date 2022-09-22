@@ -121,7 +121,7 @@ namespace LexemsAnalyzer
                 }
                 catch(KeyNotFoundException e)
                 {
-                    Console.WriteLine("Неопознанный символ : " + "\'" + CurrentSymbol + "\'" +
+                    Console.WriteLine("Неопознанный символ: " + "\'" + CurrentSymbol + "\'" +
                         " в строке " + (LineCounter + 1) + " и столбце " + (ColumnCounter + 1));
                     return false;
                 }
@@ -151,6 +151,8 @@ namespace LexemsAnalyzer
 
                     if(lexem.Type == "")
                     {
+                        if (lexem.Value == null)
+                            throw new Exception("Исходный код отсутствует");
                         if(lexem.Value.Length > 12)
                         {
                             Lexem = lexem.Value;
