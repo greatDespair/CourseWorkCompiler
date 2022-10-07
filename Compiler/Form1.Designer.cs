@@ -36,6 +36,7 @@
             // CodeField
             // 
             this.CodeField.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.CodeField.Font = new System.Drawing.Font("Consolas", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.CodeField.Location = new System.Drawing.Point(12, 12);
             this.CodeField.Multiline = true;
             this.CodeField.Name = "CodeField";
@@ -55,11 +56,13 @@
             // 
             // ConsoleView
             // 
+            this.ConsoleView.Font = new System.Drawing.Font("Courier New", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.ConsoleView.FormattingEnabled = true;
-            this.ConsoleView.ItemHeight = 15;
+            this.ConsoleView.HorizontalScrollbar = true;
+            this.ConsoleView.ItemHeight = 21;
             this.ConsoleView.Location = new System.Drawing.Point(12, 550);
             this.ConsoleView.Name = "ConsoleView";
-            this.ConsoleView.Size = new System.Drawing.Size(722, 154);
+            this.ConsoleView.Size = new System.Drawing.Size(722, 151);
             this.ConsoleView.TabIndex = 3;
             // 
             // MainForm

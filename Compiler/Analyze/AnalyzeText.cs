@@ -10,6 +10,7 @@ namespace Compiler
     public class AnalyzeText
     {
         delegate void StateDelegate();
+        public string CurrentError { get; private set; }
         StateDelegate States { get; set; }
         public string FileText { get; set; }
         string Lexem { get; set; }
@@ -20,6 +21,7 @@ namespace Compiler
         private List<Identifier> CurrentLexems{ get; set; }
         public AnalyzeText(string coreText)
         {
+            CurrentError = "Успешное выполнение. CODE: X00";
             stateMap = new Dictionary<char, Action>();
             CurrentLexems = new List<Identifier>();
             stateMap.Add('1', StateNum);
@@ -123,6 +125,10 @@ namespace Compiler
                 {
                     Console.WriteLine("Неопознанный символ : " + "\'" + CurrentSymbol + "\'" +
                         " в строке " + (LineCounter + 1) + " и столбце " + (ColumnCounter + 1));
+
+                    CurrentError = "Неопознанный символ : " + "\'" + CurrentSymbol + "\'" +
+                        " в строке " + (LineCounter + 1) + " и столбце " + (ColumnCounter + 1) + " <CODE X01>";
+
                     return false;
                 }
                 catch (Exception e)
@@ -154,6 +160,8 @@ namespace Compiler
                         if(lexem.Value.Length > 12)
                         {
                             Lexem = lexem.Value;
+                            CurrentError = "Слишком длинное название для переменной " + Lexem + " в строке " + (LineCounter
+                                + 1) + " и столбце " + (ColumnCounter + 1) + " <CODE X02>";
                             throw new Exception("Слишком длинное название для переменной " + Lexem + " в строке " + (LineCounter 
                                 + 1) + " и столбце " + (ColumnCounter + 1));
                         }
@@ -203,7 +211,10 @@ namespace Compiler
                 {
                     IsWrongSyntax = false;
                     if (Lexem != "end_while")
-                        throw new Exception("Неправильное использование символа \'_\' в строке " + (LineCounter + 1) + " и столбце " + (ColumnCounter + 1));
+                    {
+                        CurrentError = "Неправильное использование символа \'_\' в строке " + (LineCounter + 1) + " и столбце " + (ColumnCounter + 1) + " <CODE X03>";
+                        return;
+                    }
                 }
 
 

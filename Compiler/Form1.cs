@@ -5,6 +5,7 @@ namespace Compiler
         public MainForm()
         {
             InitializeComponent();
+            CodeField.AcceptsTab = true;
         }
 
         private void CompileButton_Click(object sender, EventArgs e)
@@ -19,11 +20,17 @@ namespace Compiler
             if (lexemsAnalyzer.Analyze())
             {
                 var lexems = lexemsAnalyzer.GetLexemsAsList();
+                string Lexems = "";
                 foreach (var lexem in lexems)
                 {
-                    ConsoleView.Text += (lexem.Type + " ");
+                    Lexems += (lexem.Type + " ");
                 }
-                ConsoleView.Text += "\n";
+                ConsoleView.Items.Add(Lexems + lexemsAnalyzer.CurrentError);
+
+            }
+            else
+            {
+                ConsoleView.Items.Add(lexemsAnalyzer.CurrentError);
             }
         }
     }

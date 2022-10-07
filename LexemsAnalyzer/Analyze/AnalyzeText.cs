@@ -13,11 +13,11 @@ namespace LexemsAnalyzer
         StateDelegate States { get; set; }
         public string FileText { get; set; }
         string Lexem { get; set; }
-        bool IsWrongSyntax;
+        bool IsWrongUnderscoreSyntax;
         int LineCounter { get; set; }
         int ColumnCounter { get; set; }
         char CurrentSymbol { get; set; }
-        private List<Identifier> CurrentLexems{ get; set; }
+        private List<Identifier> CurrentLexems { get; set; }
         public AnalyzeText(string path)
         {
             stateMap = new Dictionary<char, Action>();
@@ -90,7 +90,7 @@ namespace LexemsAnalyzer
         };
 
         Dictionary<char, Action> stateMap { get; set; }
-        
+
         public bool Analyze()
         {
             if (!TryAnalyzeSymbols())
@@ -117,9 +117,9 @@ namespace LexemsAnalyzer
             {
                 try
                 {
-                    stateMap[CurrentSymbol](); 
+                    stateMap[CurrentSymbol]();
                 }
-                catch(KeyNotFoundException e)
+                catch (KeyNotFoundException e)
                 {
                     Console.WriteLine("Неопознанный символ: " + "\'" + CurrentSymbol + "\'" +
                         " в строке " + (LineCounter + 1) + " и столбце " + (ColumnCounter + 1));
@@ -135,34 +135,31 @@ namespace LexemsAnalyzer
             CheckLine();
             return true;
         }
-        private void TryAnalyzeText() 
+        private void TryAnalyzeText()
         {
-            foreach(var lexem in CurrentLexems)
+            foreach (var lexem in CurrentLexems)
             {
-                if(lexem.Type == "")
+                foreach (var token in tokens)
                 {
-                    foreach(var token in tokens)
+                    if (lexem.Value == Convert.ToString(token.Value))
                     {
-                        if(lexem.Value == Convert.ToString(token.Value))
-                        {
-                            lexem.Type = "<" + token.Type + ">";
-                        }
+                        lexem.Type = "<" + token.Type + ">";
                     }
+                }
 
-                    if(lexem.Type == "")
+                if (lexem.Type == "")
+                {
+                    if (lexem.Value == null)
+                        throw new Exception("Исходный код отсутствует");
+                    if (lexem.Value.Length > 12)
                     {
-                        if (lexem.Value == null)
-                            throw new Exception("Исходный код отсутствует");
-                        if(lexem.Value.Length > 12)
-                        {
-                            Lexem = lexem.Value;
-                            throw new Exception("Слишком длинное название для переменной " + Lexem + " в строке " + (LineCounter 
-                                + 1) + " и столбце " + (ColumnCounter + 1));
-                        }
-                        if(lexem.Value.Length > 0)
-                            lexem.Type = "<variable>";
-
+                        Lexem = lexem.Value;
+                        throw new Exception("Слишком длинное название для переменной " + Lexem + " в строке " + (LineCounter
+                            + 1) + " и столбце " + (ColumnCounter + 1));
                     }
+                    if (lexem.Value.Length > 0)
+                        lexem.Type = "<variable>";
+
                 }
             }
         }
@@ -182,7 +179,7 @@ namespace LexemsAnalyzer
         {
             ColumnCounter++;
             Lexem += CurrentSymbol;
-            IsWrongSyntax = true;
+            IsWrongUnderscoreSyntax = true;
         }
 
         private void StateNum()
@@ -202,9 +199,9 @@ namespace LexemsAnalyzer
         {
             if (FileText.Any())
             {
-                if (IsWrongSyntax)
+                if (IsWrongUnderscoreSyntax)
                 {
-                    IsWrongSyntax = false;
+                    IsWrongUnderscoreSyntax = false;
                     if (Lexem != "end_while")
                         throw new Exception("Неправильное использование символа \'_\' в строке " + (LineCounter + 1) + " и столбце " + (ColumnCounter + 1));
                 }
@@ -217,7 +214,7 @@ namespace LexemsAnalyzer
         }
         private void CheckNewLine()
         {
-            if(CurrentSymbol == '\n')
+            if (CurrentSymbol == '\n')
             {
                 ColumnCounter = 1;
 
