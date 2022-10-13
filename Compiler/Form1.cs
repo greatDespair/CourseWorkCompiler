@@ -1,3 +1,5 @@
+using Compiler.Semantic;
+
 namespace Compiler
 {
     public partial class MainForm : Form
@@ -15,18 +17,15 @@ namespace Compiler
                 ConsoleView.Items.Add("Исходный код программы отсутствует");
                 return;
             }
-            
+
             AnalyzeText lexemsAnalyzer = new AnalyzeText(Convert.ToString(CodeField.Text));
             if (lexemsAnalyzer.Analyze())
             {
                 var lexems = lexemsAnalyzer.GetLexemsAsList();
-                string Lexems = "";
-                foreach (var lexem in lexems)
-                {
-                    Lexems += (lexem.Type + " ");
-                }
-                ConsoleView.Items.Add(Lexems + lexemsAnalyzer.CurrentError);
-
+                ConsoleView.Items.Add(lexemsAnalyzer.CurrentError);
+                SemanticAnalyze semanticAnalyzer = new SemanticAnalyze(lexems);
+                semanticAnalyzer.TryAnalyze();
+                ConsoleView.Items.Add(semanticAnalyzer.Error);
             }
             else
             {
