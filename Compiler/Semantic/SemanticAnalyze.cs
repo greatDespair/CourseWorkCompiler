@@ -8,31 +8,48 @@ namespace Compiler.Semantic
 {
     public class SemanticAnalyze
     {
+        // входная строка лексем
+        private List<Identifier> _inputString;
+        // стек символов входной ленты
+        private Stack<Identifier> _symbolStack;
+        // стек состояний
+        private Stack<int> _stateStack;
+        // корень
+        private Identifier root;
         public string Error { get; private set; }
-        private List<Identifier> _lexems;
         public SemanticAnalyze(List<Identifier> lexems)
         {
             Error = "Успешная проверка семантики. CODEX00";
-            _lexems = lexems;
+            _inputString = lexems;
         }
 
         public bool TryAnalyze()
         {
             GotoRules gotoRules = new GotoRules();
-            var EmptyLexems = _lexems.Where(x => x.Type == "").ToList();
+            var EmptyLexems = _inputString.Where(x => x.Type == "").ToList();
             foreach (var lexeme in EmptyLexems)
             {
-                _lexems.Remove(lexeme);
+                _inputString.Remove(lexeme);
             }
-            for(int i = 0; i < _lexems.Count - 1; i++)
+            for(int i = 0; i < _inputString.Count - 1; i++)
             {
-                if (!gotoRules.CheckRule(_lexems[i], _lexems[i + 1]))
+                if (!gotoRules.CheckRule(_inputString[i], _inputString[i + 1]))
                 {
-                    Error = "Переход из " + _lexems[i].Type + " в " + _lexems[i + 1].Type +" невозможен. CODEX10";
+                    Error = "Переход из " + _inputString[i].Type + " в " + _inputString[i + 1].Type +" невозможен. CODEX10";
                     return false;
                 }
             }
             return true;
+        }
+
+        private bool tryReduce()
+        {
+
+        }
+
+        private bool tryGoto()
+        {
+
         }
     }
 }

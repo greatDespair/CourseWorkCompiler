@@ -5,6 +5,8 @@ namespace Compiler.Semantic
 {
     public class GotoRules
     {
+
+
         public List<KeyValuePair<string, string>> Rules { get; private set; }
 
         public GotoRules()
