@@ -31,12 +31,13 @@
             this.CodeField = new System.Windows.Forms.TextBox();
             this.CompileButton = new System.Windows.Forms.Button();
             this.ConsoleView = new System.Windows.Forms.ListBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // CodeField
             // 
             this.CodeField.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.CodeField.Font = new System.Drawing.Font("Consolas", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.CodeField.Font = new System.Drawing.Font("Century Gothic", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.CodeField.Location = new System.Drawing.Point(12, 12);
             this.CodeField.Multiline = true;
             this.CodeField.Name = "CodeField";
@@ -46,9 +47,9 @@
             // CompileButton
             // 
             this.CompileButton.Font = new System.Drawing.Font("Yu Gothic UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.CompileButton.Location = new System.Drawing.Point(253, 483);
+            this.CompileButton.Location = new System.Drawing.Point(12, 483);
             this.CompileButton.Name = "CompileButton";
-            this.CompileButton.Size = new System.Drawing.Size(228, 58);
+            this.CompileButton.Size = new System.Drawing.Size(221, 41);
             this.CompileButton.TabIndex = 2;
             this.CompileButton.Text = "Компилировать";
             this.CompileButton.UseVisualStyleBackColor = true;
@@ -60,21 +61,31 @@
             this.ConsoleView.FormattingEnabled = true;
             this.ConsoleView.HorizontalScrollbar = true;
             this.ConsoleView.ItemHeight = 21;
-            this.ConsoleView.Location = new System.Drawing.Point(12, 550);
+            this.ConsoleView.Location = new System.Drawing.Point(12, 529);
             this.ConsoleView.Name = "ConsoleView";
-            this.ConsoleView.Size = new System.Drawing.Size(722, 151);
+            this.ConsoleView.Size = new System.Drawing.Size(722, 172);
             this.ConsoleView.TabIndex = 3;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Font = new System.Drawing.Font("Century Gothic", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.textBox1.Location = new System.Drawing.Point(239, 486);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.PlaceholderText = "Enter data";
+            this.textBox1.Size = new System.Drawing.Size(495, 37);
+            this.textBox1.TabIndex = 4;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(746, 718);
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.ConsoleView);
             this.Controls.Add(this.CompileButton);
             this.Controls.Add(this.CodeField);
             this.Name = "MainForm";
-            this.Text = "ZahaR.2";
+            this.Text = "Course Project 20VP1";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -85,5 +96,6 @@
         private TextBox CodeField;
         private Button CompileButton;
         private ListBox ConsoleView;
+        private TextBox textBox1;
     }
 }

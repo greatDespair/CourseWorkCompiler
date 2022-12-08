@@ -24,7 +24,7 @@ namespace Compiler
                 var lexems = lexemsAnalyzer.GetLexemsAsList();
                 ConsoleView.Items.Add(lexemsAnalyzer.CurrentError);
                 SemanticAnalyze semanticAnalyzer = new SemanticAnalyze(lexems);
-                semanticAnalyzer.TryAnalyze();
+                semanticAnalyzer.AnalyzeSyntax();
                 ConsoleView.Items.Add(semanticAnalyzer.Error);
             }
             else

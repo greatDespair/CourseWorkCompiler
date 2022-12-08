@@ -21,7 +21,7 @@ namespace Compiler
         private List<Identifier> CurrentLexems{ get; set; }
         public AnalyzeText(string coreText)
         {
-            CurrentError = "Успешное выполнение. CODE: X00";
+            CurrentError = "Успешный анализ. CODE: X00";
             stateMap = new Dictionary<char, Action>();
             CurrentLexems = new List<Identifier>();
             stateMap.Add('1', StateNum);
