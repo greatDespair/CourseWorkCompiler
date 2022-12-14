@@ -70,7 +70,7 @@ namespace Compiler.Semantic
         private string END_MARKER = "$";
 
         // Количество правил
-        private readonly int RULES_COUNT = 19;
+        private const int RULES_COUNT = 20;
 
         // входная строка лексем
         private List<Identifier> _inputString;
@@ -84,29 +84,28 @@ namespace Compiler.Semantic
         /// <summary>
         /// Словарь правил свертки
         /// </summary>
-        Dictionary<int, Reduction> Reductions = new Dictionary<int, Reduction>{
-            {2, new Reduction("<program>", 2) },
-            {10, new Reduction("<variables declaration>", 5)},
-            {5, new Reduction("<calculation part>", 3)     },
-            {11, new Reduction("<variables list>", 1)       },
-            {7, new Reduction("<variables list>", 3)       },
-            {8, new Reduction("<list of assignments>", 1)  },
-            {4, new Reduction("<list of assignments>",2)   },
-            {42, new Reduction("<assignment>", 4)           },
-            {15, new Reduction("<assignment>", 1)           },
-            {20, new Reduction("<function>", 7)             },
-            {31, new Reduction("<function>", 5)             },
-            {32, new Reduction("<function>", 5)             },
-            {33, new Reduction("<expression>", 2)           },
-            {34, new Reduction("<expression>", 1)           },
-            {18, new Reduction("<subexpression>", 3)        },
-            {25, new Reduction("<subexpression>", 1)        },
-            {24, new Reduction("<subexpression>", 3)        },
-            {35, new Reduction("<value>", 1)                },
-            {30, new Reduction("<value>", 1)                },
-            {27, new Reduction("<binary operator>", 1)      },
-            {28, new Reduction("<binary operator>", 1)      },
-            {29, new Reduction("<binary operator>", 1)      },
+        Reduction[] Reductions = new Reduction[RULES_COUNT]
+        {
+            new Reduction ( "<PROGRAM>", 2 ), // 0
+	        new Reduction ( "<VARIABLES DECLARATION>", 5 ), // 1
+	        new Reduction ( "<VARIABLES LIST>", 3 ), // 2
+	        new Reduction ( "<VARIABLES LIST>", 1 ), // 3
+	        new Reduction ( "<CALCULATIONS DESCRIPTION>", 3 ), // 4
+	        new Reduction ( "<OPERATIONS LIST>", 2 ), // 5
+	        new Reduction ( "<OPERATIONS LIST>", 2 ), // 6
+	        new Reduction ( "<OPERATIONS LIST>", 2 ), // 7
+	        new Reduction ( "<OPERATIONS LIST>", 1 ), // 8
+	        new Reduction ( "<OPERATIONS LIST>", 1 ), // 9
+	        new Reduction ( "<OPERATIONS LIST>", 1 ), // 10
+	        new Reduction ( "<ASSIGNMENT>", 4 ), // 11
+	        new Reduction ( "<EXPRESSION>", 2 ), // 12
+	        new Reduction ( "<EXPRESSION>", 3 ), // 13
+	        new Reduction ( "<EXPRESSION>", 3 ), // 14
+	        new Reduction ( "<EXPRESSION>", 1 ), // 15
+	        new Reduction ( "<OPERAND>", 1 ), // 16
+	        new Reduction ( "<OPERAND>", 1 ), // 17
+	        new Reduction ( "<FUNCTION>", 5 ), // 18
+	        new Reduction ( "<OPERATOR>", 8 ), // 19
         };
         /// <summary>
         /// Словарь правил перехода для нетерминалов
@@ -114,16 +113,15 @@ namespace Compiler.Semantic
         private Dictionary<string, Dictionary<int, int>> _gotoRules =
             new Dictionary<string, Dictionary<int, int>>()
             {
-                {"<variables declaration>", new Dictionary<int, int>(){ { 0, 1 } } },
-                {"<calculation part>", new Dictionary<int, int>(){ { 1, 2 } } },
-                {"<variables list>", new Dictionary<int, int>(){ { 6, 7 }, { 36, 37 }, { 39, 40 }, { 12, 7 } } },
-                {"<list of assignments>", new Dictionary<int, int>(){ { 3, 4 }, { 8, 4 }, { 19, 4 } } },
-                {"<assignment>", new Dictionary<int, int>(){ { 3, 8 }, { 19, 8 } } },
-                {"<function>", new Dictionary<int, int>(){ { 3, 15 }, { 19, 15 } } },
-                {"<expression>", new Dictionary<int, int>(){ { 13, 14 }, { 17, 14 } } },
-                {"<subexpression>", new Dictionary<int, int>(){ { 13, 34 }, { 17, 34 }, { 23, 34 } } },
-                {"<value>", new Dictionary<int, int>(){ { 13, 25 }, { 17, 25 }, { 23, 25 } } },
-                {"<binary operator>", new Dictionary<int, int>{{34, 26}} }
+                {"<VARIABLES DECLARATION>", new Dictionary<int, int>(){ { 0, 1 } } },
+                {"<CALCULATIONS DESCRIPTION>", new Dictionary<int, int>(){ { 1, 2 } } },
+                {"<VARIABLES LIST>", new Dictionary<int, int>(){ { 3, 4 }, { 35, 36 } } },
+                {"<OPERATIONS LIST>", new Dictionary<int, int>(){ { 11, 12 }, { 41, 42 }, { 43, 44 } } },
+                {"<ASSIGNMENT>", new Dictionary<int, int>(){ { 11, 17 }, { 12, 14 }, { 41, 17}, { 42, 14}, { 43, 17}, { 44, 13} } },
+                {"<FUNCTION>", new Dictionary<int, int>(){ { 11, 18 }, { 12, 15 }, { 41, 18 }, { 42, 15 }, { 43, 18 }, { 44, 15 } } },
+                {"<OPERATOR>", new Dictionary<int, int>(){ { 11, 19 }, { 12, 16 }, { 41, 19 }, { 42, 16 }, { 43, 19 }, { 44, 16 } } },
+                {"<EXPRESSION>", new Dictionary<int, int>(){ { 21, 22 }, { 24, 25 }, { 26, 27 }, { 28, 29 }, { 48, 29 }, { 39, 40 } } },
+                {"<OPERAND>", new Dictionary<int, int>(){ { 21, 31 }, { 24, 31 }, { 26, 31 }, { 28, 31 }, { 48, 31 }, { 39, 31 } } },
             };
 
         /// <summary>
@@ -132,150 +130,155 @@ namespace Compiler.Semantic
         private Dictionary<string, Dictionary<int, Action>> _shiftAndReduceRules =
             new Dictionary<string, Dictionary<int, Action>>()
             {
-                {"<start of calculation part>",
+                {"<begin of variables declaration>",
                     new Dictionary<int, Action>(){
-                        {1, new Action('S', 3) } } },
+                        {0, new Action('S', 3) } } },
 
                 {"<colon>",
                     new Dictionary<int, Action>(){
-                        {7, new Action('S', 8) } } },
-
-                {"<variables type>",
-                    new Dictionary<int, Action>(){
-                        {8, new Action('S', 9) } } },
-
-                {"<end of calculation part>",
-                    new Dictionary<int, Action>(){
                         {4, new Action('S', 5) } } },
 
-                {"<variables declaration keyword>",
+                {"<type>",
                     new Dictionary<int, Action>(){
-                        {0, new Action('S', 6) } } },
+                        {5, new Action('S', 6) } } },
 
                 {"<semicolon>",
                     new Dictionary<int, Action>(){
-                        {9, new Action('S', 10) },
-                        {14, new Action('R', 42) },
-                        { 14, new Action('S', 11) },
-                        { 38, new Action('R', 31) },
-                        { 41, new Action('R', 32) } } },
-
-                {"<variable>",
-                    new Dictionary<int, Action>(){
-                        { 6, new Action('R', 11) },
-                        { 3, new Action('S', 11) },
-                        { 17, new Action('R', 11) },
-                        { 13, new Action('R', 35) },
-                        { 17, new Action('R', 35) },
-                        { 23, new Action('R', 35) },
-                        { 27, new Action('R', 35) },
-                        { 28, new Action('R', 35) },
-                        { 29, new Action('R', 35) } } },
+                        { 6, new Action('S', 7) },
+                        { 22, new Action('S', 23) },
+                        { 37, new Action('S', 38) },
+                        { 45, new Action('S', 46) },
+                        { 25, new Action('R', 12) } } },
 
                 {"<comma>",
                     new Dictionary<int, Action>(){
-                        { 11, new Action('S', 12) } } },
+                        { 4, new Action('S', 8) },
+                        { 36, new Action('S', 8) }} },
+
+                {"<variable>",
+                    new Dictionary<int, Action>(){
+                        { 3, new Action('S', 10) },
+                        { 8, new Action('S', 9) },
+                        { 11, new Action('S', 20) },
+                        { 12, new Action('S', 20) },
+                        { 21, new Action('S', 32) },
+                        { 26, new Action('S', 32) },
+                        { 28, new Action('S', 32) },
+                        { 35, new Action('S', 10) },
+                        { 39, new Action('S', 32) },
+                        { 41, new Action('S', 20) },
+                        { 42, new Action('S', 20) },
+                        { 43, new Action('S', 20) },
+                        { 44, new Action('S', 20) } } },
+
+                {"<begin of calculations description>",
+                    new Dictionary<int, Action>(){
+                        {1, new Action('S', 11) } } },
+
+                {"<end of calculations description>",
+                    new Dictionary<int, Action>(){
+                        {12, new Action('S', 13) } } },
 
                 {"<assign>",
                     new Dictionary<int, Action>(){
-                        { 11, new Action('S', 13) } } },
+                        { 20, new Action('S', 21) } } },
 
-                {"<\"while\" header>",
+                {"<unary operator>",
                     new Dictionary<int, Action>(){
-                        { 3, new Action('S', 16) },
-                        { 19, new Action('S', 16) } } },
+                        { 21, new Action('S', 24) },
+                        { 24, new Action('S', 24) },
+                        { 26, new Action('S', 24) },
+                        { 28, new Action('S', 24) },
+                        { 39, new Action('R', 24) } } },
+
+                {"<binary operator>",
+                    new Dictionary<int, Action>(){
+                        { 22, new Action('S', 26) },
+                        { 25, new Action('S', 26) },
+                        { 29, new Action('S', 26) },
+                        { 40, new Action('R', 26) } } },
 
                 {"<opening bracket>",
                     new Dictionary<int, Action>(){
-                        { 21, new Action('S', 36) },
-                        { 16, new Action('S', 17) },
-                        { 22, new Action('S', 39) },
-                        { 17, new Action('S', 17) },
-                        { 23, new Action('S', 17) } } },
+                        { 21, new Action('S', 28) },
+                        { 24, new Action('S', 28) },
+                        { 26, new Action('S', 28) },
+                        { 28, new Action('S', 28) },
+                        { 34, new Action('S', 35) },
+                        { 39, new Action('S', 28) } } },
 
                 {"<closing bracket>",
                     new Dictionary<int, Action>(){
-                        { 7, new Action('S', 18) },
-                        { 14, new Action('S', 18) },
-                        { 34, new Action('S', 18) },
-                        { 37, new Action('S', 38) },
-                        { 40, new Action('S', 41) },
-                        { 14, new Action('R', 18) } } },
-
-                {"<unary operator NOT>",
-                    new Dictionary<int, Action>(){
-                        { 13, new Action('S', 23) },
-                        { 17, new Action('S', 23) } } },
-
-                {"<binary operator AND>",
-                    new Dictionary<int, Action>(){
-                        { 11, new Action('R', 27) },
-                        { 24, new Action('R', 27) } } },
-
-                {"<binary operator OR>",
-                    new Dictionary<int, Action>(){
-                        { 11, new Action('R', 28) },
-                        { 24, new Action('R', 28) } } },
-
-                {"<binary operator IMP>",
-                    new Dictionary<int, Action>(){
-                        { 11, new Action('R', 29) },
-                        { 24, new Action('R', 29) } } },
-
-                {"<start of \"while\" block>",
-                    new Dictionary<int, Action>(){
-                        { 18, new Action('S', 19) } } },
-
-                {"<end of \"while\" block>",
-                    new Dictionary<int, Action>(){
-                        { 4, new Action('S', 20) } } },
+                        { 29, new Action('S', 30) },
+                        { 36, new Action('S', 37) },
+                        { 25, new Action('R', 12) } } },
 
                 {"<constant>",
                     new Dictionary<int, Action>(){
-                        { 13, new Action('R', 30) },
-                        { 17, new Action('R', 30) },
-                        { 23, new Action('R', 30) },
-                        { 27, new Action('R', 30) },
-                        { 28, new Action('R', 30) },
-                        { 29, new Action('R', 30) } } },
+                        { 21, new Action('S', 33) },
+                        { 24, new Action('S', 33) },
+                        { 26, new Action('S', 33) },
+                        { 28, new Action('S', 33) },
+                        { 39, new Action('S', 33) } } },
 
-                {"<read function>",
+                {"<function name>",
                     new Dictionary<int, Action>(){
-                        { 3, new Action('S', 21) },
-                        { 19, new Action('S', 21) } } },
+                        { 11, new Action('S', 34) },
+                        { 12, new Action('S', 34) },
+                        { 41, new Action('S', 34) },
+                        { 42, new Action('S', 34) },
+                        { 43, new Action('S', 34) },
+                        { 44, new Action('S', 34) } } },
 
-                {"<write function>",
+                {"<if operator>",
                     new Dictionary<int, Action>(){
-                        { 3, new Action('S', 22) },
-                        { 19, new Action('S', 22) } } },
+                        { 11, new Action('S', 39) },
+                        { 12, new Action('S', 39) },
+                        { 41, new Action('S', 39) },
+                        { 42, new Action('S', 39) },
+                        { 43, new Action('S', 39) },
+                        { 44, new Action('S', 39) } } },
+
+                {"<then block>",
+                    new Dictionary<int, Action>(){
+                        { 40, new Action('S', 41) },
+                        { 25, new Action('S', 12) } } },
+
+                {"<else block>",
+                    new Dictionary<int, Action>(){
+                        { 42, new Action('S', 43) } } },
+
+                {"<end if operator>",
+                    new Dictionary<int, Action>(){
+                        { 44, new Action('S', 45) } } },
+
             };
 
         /// <summary>
         /// Состояние -> Правило свертки
         /// </summary>
-        private List<KeyValuePair<int, int>> _reduceRules = 
-            new List<KeyValuePair<int, int>>()
+        private Dictionary<int, int> _reduceRules = 
+            new Dictionary<int, int>()
         {
-            new KeyValuePair<int, int>( 2, 2 ),
-            new KeyValuePair<int, int>( 5, 5 ),
-            new KeyValuePair<int, int>( 10, 10 ),
-            new KeyValuePair<int, int>( 11, 11 ),
-            new KeyValuePair<int, int>( 7, 7 ),
-            new KeyValuePair<int, int>( 8,  8 ),
-            new KeyValuePair<int, int>( 4,  4 ),
-            new KeyValuePair<int, int>( 15,  15 ),
-            new KeyValuePair<int, int>( 31,  31 ),
-            new KeyValuePair<int, int>( 32,  32 ),
-            new KeyValuePair<int, int>( 33,  33 ),
-            new KeyValuePair<int, int>( 34,  34 ),
-            new KeyValuePair<int, int>( 18,  18 ),
-            new KeyValuePair<int, int>( 25, 25 ),
-            new KeyValuePair<int, int>( 24,  24 ),
-            new KeyValuePair<int, int>( 35,  35 ),
-            new KeyValuePair<int, int>( 27,  27),
-            new KeyValuePair<int, int>( 28,  28),
-            new KeyValuePair<int, int>( 29,  29),
-            new KeyValuePair<int, int>( 30,  30)
+            {  2, 0   },
+            {  7, 1   },
+            {  9, 2   },
+            {  10, 3  },
+            {  13, 4  },
+            {  14, 5  },
+            {  15, 6  },
+            {  16, 7  },
+            {  17, 8  },
+            {  18, 9  },
+            {  19, 10 },
+            {  23, 11 },
+            {  27, 13 },
+            {  30, 14 },
+            {  31, 15 },
+            {  32, 16 },
+            {  33, 17 },
+            {  38, 18 },
+            {  46, 19 },
         };
 
         /// <summary>
@@ -284,26 +287,25 @@ namespace Compiler.Semantic
         private Dictionary<string, string> _tokensEquals = 
             new Dictionary<string, string>()
         {
-            { "<start of calculation part>" , "begin"},
-            { "<end of calculation part>", "end"},
-            { "<variables declaration keyword>", "var"},
-            { "<variables type>", "logical"},
-            { "<binary operator AND>", "and"},
-            { "<binary operator OR>", "or"},
-            { "<\"while\" header>", "while"},
-            { "<start of \"while\" block>", "do" },
-            { "<end of \"while\" block>", "end_while"  },
-            { "<unary operator NOT>" , "not"},
-            { "<binary operator IMP>", "imp"  },
-            { "<write function>" , "write" },
-            { "<read function>", "read" },
-            { "<colon>",":" },
-            { "<semicolon>", ";"  },
-            { "<comma>", ","  },
-            { "<assign>", "="  },
-            { "<opening bracket>", "("  },
-            { "<closing bracket>", ")"  },
-            { "<constant>" , "0|1" }
+            { "<begin of variables declaration>", "var" },
+            { "<colon>", ":" },
+            { "<type>", "type" },
+            { "<semicolon>", ";" },
+            { "<comma>", "," },
+            { "<variable>", "variable" },
+            { "<begin of calculations description>", "begin" },
+            { "<end of calculations description>", "end" },
+            { "<assign>", "=" },
+            { "<unary operator>", "unary operator" },
+            { "<binary operator>", "<binary operator>" },
+            { "<opening bracket>", "(" },
+            { "<closing bracket>", ")" },
+            { "<constant>", "constant" },
+            { "<function name>", "function" },
+            { "<if operator>", "if" },
+            { "<then block>", "then" },
+            { "<else block>", "else" },
+            { "<end if operator>", "end_if" }
         };
 
         public SemanticAnalyze(List<Identifier> lexems)
@@ -316,7 +318,7 @@ namespace Compiler.Semantic
 
         public void CompileError()
         {
-            if(_stateStack.Count > 0 && _symbolStack.Peek().Value == NONTERMINAL)
+            if(_stateStack.Count > 0 && _symbolStack.Peek().Type == NONTERMINAL)
             {
                 Error = "Неопознанный символ \"" + _inputString[0].Value + "\" в " +
                     _symbolStack.Peek().Value;
@@ -345,7 +347,7 @@ namespace Compiler.Semantic
 
             while (true)
             {
-                if (TryAction() || TryGoto())
+                if (TryGoto() || TryAction())
                 {
                     continue;
                 }
@@ -368,24 +370,6 @@ namespace Compiler.Semantic
                 return false;
             }
         }
-        public bool TryAnalyze()
-        {
-            GotoRules gotoRules = new GotoRules();
-            var EmptyLexems = _inputString.Where(x => x.Type == "").ToList();
-            foreach (var lexeme in EmptyLexems)
-            {
-                _inputString.Remove(lexeme);
-            }
-            for(int i = 0; i < _inputString.Count - 1; i++)
-            {
-                if (!gotoRules.CheckRule(_inputString[i], _inputString[i + 1]))
-                {
-                    Error = "Переход из " + _inputString[i].Type + " в " + _inputString[i + 1].Type +" невозможен. CODEX10";
-                    return false;
-                }
-            }
-            return true;
-        }
 
         private void Reduce(Reduction reduction)
         {
@@ -403,16 +387,10 @@ namespace Compiler.Semantic
         }
         private bool TryReduce()
         {
-            if(_symbolStack.Count != 0)
+            if(_reduceRules.ContainsKey(_stateStack.Peek()))
             {
-                if (_gotoRules.ContainsKey(_symbolStack.Peek().Type))
-                {
-                    if(_gotoRules[_symbolStack.Peek().Type].ContainsKey(_stateStack.Peek()))
-                    {
-                        _stateStack.Push(_gotoRules[_symbolStack.Peek().Type][_stateStack.Peek()]);
-                        return true;
-                    }
-                }
+                Reduce(Reductions[_reduceRules[_stateStack.Peek()]]);
+                return true;
             }
             return false;
         }
@@ -456,12 +434,17 @@ namespace Compiler.Semantic
 
         private bool TryGoto()
         {
-            if(_reduceRules.Where(r => r.Key == _stateStack.Peek()).Any())
+            if (_symbolStack.Count != 0)
             {
-                Reduce(Reductions[_stateStack.Peek()]);
-                return true;
+                if (_gotoRules.ContainsKey(_symbolStack.Peek().Type))
+                {
+                    if (_gotoRules[_symbolStack.Peek().Type].ContainsKey(_stateStack.Peek()))
+                    {
+                        _stateStack.Push(_gotoRules[_symbolStack.Peek().Type][_stateStack.Peek()]);
+                        return true;
+                    }
+                }
             }
-
             return false;
         }
         private bool TryAction()

@@ -8,5 +8,140 @@ namespace Compiler.Translation
 {
     public class VirtualMachine
     {
+        private StreamReader _read;
+        private Dictionary<string, bool> _variables = new Dictionary<string, bool>();
+        private Stack<bool> _stack = new Stack<bool>();
+        private List<string> _program = new List<string>();
+        private int _ip = 0;
+        public VirtualMachine(string Path)
+        {
+            char[] buff = new char[10];
+            try
+            {
+                _read = new StreamReader(Path);
+                while (!_read.EndOfStream)
+                {
+                    _read.ReadBlock(buff);
+                    _program.Add(buff.ToString());
+                }
+                _read.Close();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Ошибка чтения файла");
+            }
+
+        }
+
+        public void Run()
+        {
+            if (_program.Count != 0)
+            {
+                while (true)
+                {
+                    string op = _program[_ip];
+
+                    string arg = "";
+
+                    if (_ip < _program.Count - 1)
+                    {
+                        arg = _program[_ip + 1];
+                    }
+
+                    if (op == "IFETCH")
+                    {
+                        _stack.Push(_variables[arg]);
+                        _ip += 2;
+                    }
+
+                    if (op == "ISTORE")
+                    {
+                        _variables[arg] = _stack.Peek();
+                        _ip += 2;
+                    }
+
+                    if (op == "IPUSH")
+                    {
+                        _stack.Push(Convert.ToBoolean(arg));
+                        _ip += 2;
+                    }
+
+                    if (op == "IPOP")
+                    {
+                        _stack.Pop();
+                        _ip++;
+                    }
+
+                    if (op == "IAND")
+                    {
+                        bool v1 = _stack.Peek();
+                        _stack.Pop();
+                        bool v2 = _stack.Peek();
+                        _stack.Pop();
+                        bool result = v1 && v2;
+                        _stack.Push(result);
+                        _ip++;
+                    }
+
+                    if (op == "IOR")
+                    {
+                        bool v1 = _stack.Peek();
+                        _stack.Pop();
+                        bool v2 = _stack.Peek();
+                        _stack.Pop();
+                        bool result = v1 || v2;
+                        _stack.Push(result);
+                        _ip++;
+                    }
+
+                    if (op == "IIMP")
+                    {
+                        bool v1 = _stack.Peek();
+                        _stack.Pop();
+                        bool v2 = _stack.Peek();
+                        _stack.Pop();
+                        bool result = !v1 || v2;
+                        _stack.Push(result);
+                        _ip++;
+                    }
+
+                    if (op == "INOT")
+                    {
+                        bool v1 = _stack.Peek();
+                        _stack.Pop();
+                        bool result = !v1;
+                        _stack.Push(result);
+                        _ip++;
+                    }
+
+                    if (op == "IWRITE")
+                    {
+                        Console.WriteLine(arg + ": " + _variables[arg] + "\n");
+                        _ip += 2;
+                    }
+
+                    if (op == "IREAD")
+                    {
+                        bool temp;
+                        Console.WriteLine("Ввод " + arg + ": ");
+                        try
+                        {
+                            temp = Convert.ToBoolean(Console.ReadLine());
+
+                            _variables[arg] = temp;
+                            _ip += 2;
+                        }
+                        catch (Exception ex)
+                        {
+                            break;
+                        }
+
+                    }
+
+                    if (op == "HALT")
+                        break;
+                }
+            }
+        }
     }
 }

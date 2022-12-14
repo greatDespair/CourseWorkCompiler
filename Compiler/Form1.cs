@@ -22,8 +22,17 @@ namespace Compiler
             if (lexemsAnalyzer.Analyze())
             {
                 var lexems = lexemsAnalyzer.GetLexemsAsList();
+                List<Identifier> InputSemantic = new List<Identifier>();
+                foreach (var lexeme in lexems)
+                {
+                    if(lexeme.Type != "")
+                    {
+                        InputSemantic.Add(lexeme);
+                    }
+                }
                 ConsoleView.Items.Add(lexemsAnalyzer.CurrentError);
-                SemanticAnalyze semanticAnalyzer = new SemanticAnalyze(lexems);
+                
+                SemanticAnalyze semanticAnalyzer = new SemanticAnalyze(InputSemantic);
                 semanticAnalyzer.AnalyzeSyntax();
                 ConsoleView.Items.Add(semanticAnalyzer.Error);
             }

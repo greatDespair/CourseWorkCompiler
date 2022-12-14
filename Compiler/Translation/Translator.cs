@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,147 +11,249 @@ namespace Compiler.Translation
     {
         private string _error;
 
-        public class Command
+        public Translator()
         {
-            public List<Identifier>? RemainPart { get; private set; }
-            public bool Result { get; set; }
-            public COMMANDS Operation { get; set; }
-            public Command? leftOperand { get; set; }
-            public Command? rightOperand { get; set; }
-
-            public Command(bool result, COMMANDS command, List<Identifier> remainPart)
-            {
-                Result = result;
-                Operation = command;
-                RemainPart = remainPart;
-                leftOperand = null;
-                rightOperand = null;
-            }
-
-            public void ExpandTree(Command node)
-            {
-                if (RemainPart.Count == 1)
-                    return;
-                switch (RemainPart[0].Type)
-                {
-                    case "<unary operator NOT>":
-                        {
-                            node.Operation = COMMANDS.NOT;
-                            RemainPart.RemoveAt(0);
-                            node.leftOperand = new Command(false, COMMANDS.EMPTY_COMMAND, null);
-                            node.rightOperand = new Command(false, COMMANDS.EMPTY_COMMAND, RemainPart);
-                            ExpandTree(node.rightOperand);
-                            break;
-                        }
-                    case "<opening bracket>":
-                        {
-
-                            break;
-                        }
-                    case "<variable>":
-                        {
-
-                            break;
-                        }
-                }
-
-            }
+            _error = "Успешное выполнение. CODE X00";
         }
 
         public enum COMMANDS
         {
-            EMPTY_COMMAND,
-            EXPAND_STORE,
-            PUT,
-            AND,
-            OR,
-            IMP,
-            NOT,
-            READ,
-            WRITE,
-            JMP_DO
+            IFETCH,
+            ISTORE,
+            IPUSH,
+            IPOP,
+            IIMP,
+            IAND,
+            IOR,
+            INOT,
+            JZ,
+            JMP,
+            IREAD,
+            IWRITE,
+            HALT
+        };
+
+        private Dictionary<string, bool> _variables = new Dictionary<string, bool>();
+
+        List<string> _commands = new List<string>();
+
+        private Dictionary<string, int> _priority = new Dictionary<string, int>()
+        {
+            {"not", 3 },
+            {"and", 2 },
+            { "or", 1 },
+            {"imp", 0 }
+        };
+
+        StreamReader _stream;
+        private int _ip = 0;
+        private bool _isRead = false;
+        private bool _isWrite = false;
+        
+        public void SaveCommands(string filePath)
+        {
+            
         }
 
-        private List<Identifier> _variables = new List<Identifier>();
-
-        private List<Command> _commandTrees = new List<Command>();
-
-        private List<Identifier> Lexems;
-
-        public Translator(List<Identifier> lexems)
+        private void OutTree(Identifier root)
         {
-            _error = "Успешное выполнение. CODE X00";
-            Lexems = lexems;
-        }
-
-        public bool Translate(List<Identifier> lexems)
-        {
-            if (CheckVariables())
+            if (root.Type == "<expression>")
             {
-                if (TryTranslateCommands())
+                Identifier exp = root;
+                List<Identifier> sequence = new List<Identifier>();
+                AstTree(exp, ref sequence);
+                var polishSequence = ExpressionConverter(sequence);
+                foreach (var item in polishSequence)
                 {
-
+                    switch (item.Type)
+                    {
+                        case "<constant>":
+                            GenerateAsm(COMMANDS.IPUSH.ToString());
+                            GenerateAsm(item.Value);
+                            break;
+                        case "<variable>":
+                            GenerateAsm(COMMANDS.IFETCH.ToString());
+                            GenerateAsm(item.Value);
+                            break;
+                        case "<binary operator AND>":
+                            GenerateAsm(COMMANDS.IAND.ToString());
+                            break;
+                        case "<binary operator OR>":
+                            GenerateAsm(COMMANDS.IOR.ToString());
+                            break;
+                        case "<binary operator IMP>":
+                            GenerateAsm(COMMANDS.IIMP.ToString());
+                            break;
+                        case "<unary operator NOT>":
+                            GenerateAsm(COMMANDS.IAND.ToString());
+                            break;
+                    }
                 }
             }
 
-            return false;
-        }
-
-        private bool TryTranslateCommands()
-        {
-            bool writeFlag = false;
-            List<Identifier> calculationPart = new List<Identifier>();
-            for (int i = 0; i < Lexems.Count - 1; i++)
+            if (root.Type == "<assignment>")
             {
-                if (writeFlag)
+                Identifier s = root.Childs[2];
+                OutTree(s);
+                GenerateAsm(COMMANDS.ISTORE.ToString());
+                if (!CheckVariable(root.Childs[0]))
                 {
-                    calculationPart.Add(Lexems[i]);
+                    return;
+                }
+                GenerateAsm(root.Childs[0].Value);
+                GenerateAsm(COMMANDS.IPOP.ToString());
+            }
+
+            if (root.Type == "<variables list>")
+            {
+                foreach (var item in root.Childs)
+                {
+                    OutTree(item);
+                }
+            }
+
+            if (root.Type == "<variable>")
+            {
+                if (_isRead)
+                {
+                    if (!CheckVariable(root)) 
+                    {
+                        return;
+                    }
+                    GenerateAsm(COMMANDS.IREAD.ToString());
+                    GenerateAsm(root.Value);
+                }
+                else if (_isWrite)
+                {
+                    if (!CheckVariable(root))
+                    {
+                        return;
+                    }
+                    GenerateAsm(COMMANDS.IWRITE.ToString());
+                    GenerateAsm(root.Value);
                 }
                 else
                 {
-                    if (Lexems[i].Type == "<start of calculation part>")
-                        writeFlag = true;
+                    _variables[root.Value] = false;
                 }
             }
 
-            List<Command> commands = new List<Command>();
-            List<Identifier> tempLexems = new List<Identifier>();
-            for (int i = 0; i < calculationPart.Count; i++)
+            // TODO: WHILE () DO
+
+            if(root.Type == "<end of calculations part>")
             {
-                tempLexems.Add(calculationPart[i]);
+                GenerateAsm(COMMANDS.HALT.ToString());
+                return;
+            }
+
+            if (root.Type == "<function>")
+            {
+                if(root.Childs[0].Value == "read")
+                    _isRead = true;
+                if(root.Childs[0].Value == "write")
+                    _isWrite = true;
+
+                Identifier s = root.Childs[2];
+
+                OutTree(s);
+                _isRead = false;
+                _isWrite = false;
+            }
+
+            if (root.Type == "<variables declaration>" || 
+                root.Type == "<calculation part>" ||
+                root.Type == "<program>" ||
+                root.Type == "<list of assignments>")
+            {
+                foreach (var child in root.Childs)
+                {
+                    OutTree(child);
+                }
+            }
+        }
+        private void GenerateAsm(string command)
+        {
+            _commands.Add(command);
+            _ip++;
+        }
+
+        private void AstTree(Identifier root, ref List<Identifier> expression)
+        {
+            foreach (var child in root.Childs)
+            {
+                AstTree(child, ref expression);
+            }
+            if (root.Value != "")
+            {
+                expression.Add(root);
             }
         }
 
-        private bool CheckVariables()
+        List<Identifier> ExpressionConverter(List<Identifier> expression)
         {
-            if (_variables.Count == 0)
-            {
-                for (int i = 0; i < Lexems.Count; i++)
-                {
-                    if (Lexems[i].Type == "<variables type>")
-                    {
-                        break;
-                    }
+            List<Identifier> newExpression = new List<Identifier>();
+            Stack<Identifier> operations = new Stack<Identifier>();
 
-                    if (Lexems[i].Type == "<variable>")
-                        _variables.Add(Lexems[i]);
+            foreach (var child in expression)
+            {
+                if(child.Type == "<variable>" || child.Type == "<constant>")
+                {
+                    if(child.Type == "<variable>" && !CheckVariable(child))
+                    {
+                        return newExpression;
+                    }
+                    newExpression.Add(child);
+                } 
+                else if (child.Type == "<opening bracket>")
+                {
+                    operations.Push(child);
                 }
+                else if (child.Type == "<closing bracket>")
+                {
+                    var operation = operations.Peek();
+                    operations.Pop();
+
+                    while(operation.Type != "<opening bracket>")
+                    {
+                        newExpression.Add(operation);
+                        operation = operations.Peek();
+                        operations.Pop();
+                    }
+                }
+                else if (child.Type == "<binary operator>" || child.Type == "<unary operator NOT>")
+                {
+                    while (operations.Any() && _priority[child.Value] < _priority[operations.Peek().Value])
+                    {
+                        newExpression.Add(operations.Peek());
+                        operations.Pop();
+                    }
+                }
+            }
+
+            while (operations.Any())
+            {
+                newExpression.Add(operations.Peek());
+                operations.Pop();
+            }
+
+            return newExpression;
+        }
+
+        private bool CheckVariable(Identifier variable)
+        {
+            if (!_variables.ContainsKey(variable.Value))
+            {
+                _error = "Необъявленная переменная \"" + variable.Value + "\" в строке " + variable.Line + "\n";
+                return false;
             }
             else
             {
-                foreach (var lexem in Lexems)
-                {
-                    if (lexem.Type == "<variable>")
-                    {
-                        if (!_variables.Where(i => i.Value == lexem.Value).Any())
-                        {
-                            _error = "Идентификатор " + lexem.Value + " не объявлен.";
-                            return false;
-                        }
-                    }
-                }
+                return true;
             }
-            return true;
         }
+
+        private List<Identifier> Lexems;
+
+       
     }
 }

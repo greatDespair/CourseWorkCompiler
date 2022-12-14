@@ -68,19 +68,20 @@ namespace Compiler
 
         List<Identifier> tokens { get; set; } = new List<Identifier>()
         {
-            new Identifier("begin", "start of calculation part"),
-            new Identifier("end","end of calculation part"),
-            new Identifier("var","variables declaration keyword"),
-            new Identifier("logical","variables type"),
-            new Identifier("and","binary operator AND"),
-            new Identifier("or","binary operator OR"),
-            new Identifier("while", "\"while\" header"),
-            new Identifier("do" , "start of \"while\" block"),
-            new Identifier("end_while" , "end of \"while\" block"),
-            new Identifier("not" , "unary operator NOT"),
-            new Identifier("imp" , "binary operator IMP"),
-            new Identifier("write" , "write function"),
-            new Identifier("read" , "read function"),
+            new Identifier("begin" , "begin of calculations description"),
+            new Identifier("end" , "end of calculations description"),
+            new Identifier("var" , "begin of variables declaration"),
+            new Identifier("logical", "type"),
+            new Identifier("and" , "binary operator"),
+            new Identifier("or" , "binary operator"),
+            new Identifier("if" , "if operator"),
+            new Identifier("then" , "then block"),
+            new Identifier("not" , "unary operator"),
+            new Identifier("imp" , "binary operator"),
+            new Identifier("write" , "function name"),
+            new Identifier("else" , "else block"),
+            new Identifier("read" , "function name"),
+            new Identifier("end_if" , "end if operator"),
             new Identifier(":" , "colon"),
             new Identifier(";" , "semicolon"),
             new Identifier("," , "comma"),
@@ -100,6 +101,7 @@ namespace Compiler
                 CurrentLexems.Clear();
                 return false;
             }
+
             try
             {
                 TryAnalyzeText();
@@ -110,6 +112,17 @@ namespace Compiler
                 Console.WriteLine(ex.Message);
                 return false;
             }
+
+            if (CurrentLexems[CurrentLexems.Count - 1].Value == "en")
+            {
+                CurrentLexems[CurrentLexems.Count - 1].Value = "end";
+                CurrentLexems[CurrentLexems.Count - 1].Type = "<end of calculations description>";
+            }
+            else
+            {
+                return false;
+            }
+            
             return true;
         }
         private bool TryAnalyzeSymbols()
