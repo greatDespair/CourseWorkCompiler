@@ -9,12 +9,14 @@ namespace Compiler.Translation
 {
     public class Translator
     {
-        private string _error;
+        public string _error { get; private set; }
 
         public Translator()
         {
             _error = "Успешное выполнение. CODE X00";
         }
+
+        bool _crashed = false;
 
         public enum COMMANDS
         {
@@ -52,12 +54,19 @@ namespace Compiler.Translation
         
         public void SaveCommands(string filePath)
         {
-            
+            using (StreamWriter sw = new StreamWriter(filePath))
+            {
+                foreach (string command in _commands)
+                {
+                    sw.WriteLine(command);
+                }
+                sw.Close();
+            }
         }
 
-        private void OutTree(Identifier root)
+        public void OutTree(Identifier root)
         {
-            if (root.Type == "<expression>")
+            if (root.Type == "<EXPRESSION>")
             {
                 Identifier exp = root;
                 List<Identifier> sequence = new List<Identifier>();
@@ -75,23 +84,23 @@ namespace Compiler.Translation
                             GenerateAsm(COMMANDS.IFETCH.ToString());
                             GenerateAsm(item.Value);
                             break;
-                        case "<binary operator AND>":
+                        case "<and>":
                             GenerateAsm(COMMANDS.IAND.ToString());
                             break;
-                        case "<binary operator OR>":
+                        case "<or>":
                             GenerateAsm(COMMANDS.IOR.ToString());
                             break;
-                        case "<binary operator IMP>":
+                        case "<imp>":
                             GenerateAsm(COMMANDS.IIMP.ToString());
                             break;
-                        case "<unary operator NOT>":
-                            GenerateAsm(COMMANDS.IAND.ToString());
+                        case "<not>":
+                            GenerateAsm(COMMANDS.INOT.ToString());
                             break;
                     }
                 }
             }
 
-            if (root.Type == "<assignment>")
+            if (root.Type == "<ASSIGNMENT>")
             {
                 Identifier s = root.Childs[2];
                 OutTree(s);
@@ -104,7 +113,7 @@ namespace Compiler.Translation
                 GenerateAsm(COMMANDS.IPOP.ToString());
             }
 
-            if (root.Type == "<variables list>")
+            if (root.Type == "<VARIABLES LIST>")
             {
                 foreach (var item in root.Childs)
                 {
@@ -140,13 +149,13 @@ namespace Compiler.Translation
 
             // TODO: WHILE () DO
 
-            if(root.Type == "<end of calculations part>")
+            if(root.Type == "<end of calculations description>")
             {
                 GenerateAsm(COMMANDS.HALT.ToString());
                 return;
             }
 
-            if (root.Type == "<function>")
+            if (root.Type == "<FUNCTION>")
             {
                 if(root.Childs[0].Value == "read")
                     _isRead = true;
@@ -160,10 +169,10 @@ namespace Compiler.Translation
                 _isWrite = false;
             }
 
-            if (root.Type == "<variables declaration>" || 
-                root.Type == "<calculation part>" ||
-                root.Type == "<program>" ||
-                root.Type == "<list of assignments>")
+            if (root.Type == "<VARIABLES DECLARATION>" || 
+                root.Type == "<PROGRAM>" ||
+                root.Type == "<CALCULATIONS DESCRIPTION>" ||
+                root.Type == "<OPERATIONS LIST>")
             {
                 foreach (var child in root.Childs)
                 {
@@ -244,6 +253,7 @@ namespace Compiler.Translation
             if (!_variables.ContainsKey(variable.Value))
             {
                 _error = "Необъявленная переменная \"" + variable.Value + "\" в строке " + variable.Line + "\n";
+                _crashed = true;
                 return false;
             }
             else
@@ -252,8 +262,12 @@ namespace Compiler.Translation
             }
         }
 
-        private List<Identifier> Lexems;
+        public bool CheckError()
+        {
+            return _crashed;
+        }
 
        
+
     }
 }

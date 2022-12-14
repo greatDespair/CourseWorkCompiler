@@ -31,7 +31,7 @@
             this.CodeField = new System.Windows.Forms.TextBox();
             this.CompileButton = new System.Windows.Forms.Button();
             this.ConsoleView = new System.Windows.Forms.ListBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // CodeField
@@ -49,7 +49,7 @@
             this.CompileButton.Font = new System.Drawing.Font("Yu Gothic UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.CompileButton.Location = new System.Drawing.Point(12, 483);
             this.CompileButton.Name = "CompileButton";
-            this.CompileButton.Size = new System.Drawing.Size(221, 41);
+            this.CompileButton.Size = new System.Drawing.Size(351, 41);
             this.CompileButton.TabIndex = 2;
             this.CompileButton.Text = "Компилировать";
             this.CompileButton.UseVisualStyleBackColor = true;
@@ -66,21 +66,22 @@
             this.ConsoleView.Size = new System.Drawing.Size(722, 172);
             this.ConsoleView.TabIndex = 3;
             // 
-            // textBox1
+            // button1
             // 
-            this.textBox1.Font = new System.Drawing.Font("Century Gothic", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.textBox1.Location = new System.Drawing.Point(239, 486);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.PlaceholderText = "Enter data";
-            this.textBox1.Size = new System.Drawing.Size(495, 37);
-            this.textBox1.TabIndex = 4;
+            this.button1.Font = new System.Drawing.Font("Yu Gothic UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.button1.Location = new System.Drawing.Point(378, 483);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(356, 41);
+            this.button1.TabIndex = 4;
+            this.button1.Text = "Запустить";
+            this.button1.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(746, 718);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.ConsoleView);
             this.Controls.Add(this.CompileButton);
             this.Controls.Add(this.CodeField);
@@ -96,6 +97,6 @@
         private TextBox CodeField;
         private Button CompileButton;
         private ListBox ConsoleView;
-        private TextBox textBox1;
+        private Button button1;
     }
 }

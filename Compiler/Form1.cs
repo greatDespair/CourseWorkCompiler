@@ -1,4 +1,6 @@
 using Compiler.Semantic;
+using Compiler.Translation;
+using System.Globalization;
 
 namespace Compiler
 {
@@ -12,6 +14,7 @@ namespace Compiler
 
         private void CompileButton_Click(object sender, EventArgs e)
         {
+            ConsoleView.Items.Add("------------" + DateTime.Now.ToString(new CultureInfo("ru-RU")) + "------------");
             if(CodeField.Text == "")
             {
                 ConsoleView.Items.Add("Исходный код программы отсутствует");
@@ -30,16 +33,24 @@ namespace Compiler
                         InputSemantic.Add(lexeme);
                     }
                 }
-                ConsoleView.Items.Add(lexemsAnalyzer.CurrentError);
-                
+
                 SemanticAnalyze semanticAnalyzer = new SemanticAnalyze(InputSemantic);
-                semanticAnalyzer.AnalyzeSyntax();
+                if(semanticAnalyzer.AnalyzeSyntax())
+                {
+                    Translator translator = new Translator();
+                    translator.OutTree(semanticAnalyzer._root);
+
+
+                        translator.SaveCommands("C:/Users/despair/Desktop/program.zhr");
+
+
+                    ConsoleView.Items.Add(translator._error);
+                    return;
+                }
                 ConsoleView.Items.Add(semanticAnalyzer.Error);
+                return;
             }
-            else
-            {
-                ConsoleView.Items.Add(lexemsAnalyzer.CurrentError);
-            }
+            ConsoleView.Items.Add(lexemsAnalyzer.CurrentError);
         }
     }
 }
