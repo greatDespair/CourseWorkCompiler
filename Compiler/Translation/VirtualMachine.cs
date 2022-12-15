@@ -134,6 +134,10 @@ namespace Compiler.Translation
                         _stack.Pop();
                         if (!v1)
                             _ip = Convert.ToInt32(arg);
+                        else
+                        {
+                            _ip += 2;
+                        }
                     }
 
                     if (op == "JMP")

@@ -47,7 +47,6 @@ namespace Compiler.Translation
             {"imp", 0 }
         };
 
-        StreamReader _stream;
         private int _ip = 0;
         private bool _isRead = false;
         private bool _isWrite = false;
@@ -92,7 +91,6 @@ namespace Compiler.Translation
                         GenerateAsm(COMMANDS.IIMP.ToString());
                     if (item.Value == "not")
                         GenerateAsm(COMMANDS.INOT.ToString());
-                    
                 }
             }
 
@@ -145,6 +143,7 @@ namespace Compiler.Translation
 
             if(root.Type == "<OPERATOR>")
             {
+                int expressionStart = _ip;
                 Identifier s1 = root.Childs[root.Childs.Count - 2];
                 OutTree(s1);
                 GenerateAsm(COMMANDS.JZ.ToString());
@@ -158,7 +157,7 @@ namespace Compiler.Translation
                 GenerateAsm("0");
 
                 _commands[adress1] = _ip.ToString();
-                _commands[adress2] = adress1.ToString();
+                _commands[adress2] = expressionStart.ToString();
             }
 
             if(root.Type == "<end of calculations description>")
@@ -280,8 +279,5 @@ namespace Compiler.Translation
         {
             return _crashed;
         }
-
-       
-
     }
 }
