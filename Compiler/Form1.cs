@@ -41,7 +41,7 @@ namespace Compiler
                     translator.OutTree(semanticAnalyzer._root);
 
 
-                        translator.SaveCommands("C:/Users/despair/Desktop/program.zhr");
+                        translator.SaveCommands(Directory.GetCurrentDirectory() + "/program.zhr");
 
 
                     ConsoleView.Items.Add(translator._error);
@@ -51,6 +51,19 @@ namespace Compiler
                 return;
             }
             ConsoleView.Items.Add(lexemsAnalyzer.CurrentError);
+        }
+
+        private void RunButton_Click(object sender, EventArgs e)
+        {
+            if(File.Exists(Directory.GetCurrentDirectory() + "/program.zhr"))
+            {
+                VirtualMachine vm = new VirtualMachine(Directory.GetCurrentDirectory() + "/program.zhr");
+                vm.Run();
+            }
+            else
+            {
+                CompileButton_Click(sender, e);
+            }
         }
     }
 }

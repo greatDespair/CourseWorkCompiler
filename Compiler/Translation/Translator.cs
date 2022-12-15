@@ -74,42 +74,38 @@ namespace Compiler.Translation
                 var polishSequence = ExpressionConverter(sequence);
                 foreach (var item in polishSequence)
                 {
-                    switch (item.Type)
+                    if( item.Type == "<constant>")
                     {
-                        case "<constant>":
                             GenerateAsm(COMMANDS.IPUSH.ToString());
                             GenerateAsm(item.Value);
-                            break;
-                        case "<variable>":
-                            GenerateAsm(COMMANDS.IFETCH.ToString());
-                            GenerateAsm(item.Value);
-                            break;
-                        case "<and>":
-                            GenerateAsm(COMMANDS.IAND.ToString());
-                            break;
-                        case "<or>":
-                            GenerateAsm(COMMANDS.IOR.ToString());
-                            break;
-                        case "<imp>":
-                            GenerateAsm(COMMANDS.IIMP.ToString());
-                            break;
-                        case "<not>":
-                            GenerateAsm(COMMANDS.INOT.ToString());
-                            break;
                     }
+                    if (item.Type == "<variable>")
+                    {
+                        GenerateAsm(COMMANDS.IFETCH.ToString());
+                        GenerateAsm(item.Value);
+                    }
+                    if( item.Value == "and")
+                            GenerateAsm(COMMANDS.IAND.ToString());
+                    if (item.Value == "or")
+                        GenerateAsm(COMMANDS.IOR.ToString());
+                    if (item.Value == "imp")
+                        GenerateAsm(COMMANDS.IIMP.ToString());
+                    if (item.Value == "not")
+                        GenerateAsm(COMMANDS.INOT.ToString());
+                    
                 }
             }
 
             if (root.Type == "<ASSIGNMENT>")
             {
-                Identifier s = root.Childs[2];
+                Identifier s = root.Childs[1];
                 OutTree(s);
                 GenerateAsm(COMMANDS.ISTORE.ToString());
-                if (!CheckVariable(root.Childs[0]))
+                if (!CheckVariable(root.Childs.Last()))
                 {
                     return;
                 }
-                GenerateAsm(root.Childs[0].Value);
+                GenerateAsm(root.Childs.Last().Value);
                 GenerateAsm(COMMANDS.IPOP.ToString());
             }
 
@@ -147,7 +143,26 @@ namespace Compiler.Translation
                 }
             }
 
-            // TODO: WHILE () DO
+            if(root.Type == "<OPERATOR>")
+            {
+                Identifier s1 = root.Childs[root.Childs.Count - 2];
+                OutTree(s1);
+                GenerateAsm(COMMANDS.JZ.ToString());
+                int adress1 = _ip;
+                GenerateAsm("0");
+
+                Identifier s2 = root.Childs[root.Childs.Count - 4];
+                OutTree(s2);
+                GenerateAsm(COMMANDS.JMP.ToString());
+                int adress2 = _ip;
+                GenerateAsm("0");
+
+                _commands[adress1] = _ip.ToString();
+
+                Identifier s3 = root.Childs[2];
+                OutTree(s3);
+                _commands[adress2] = _ip.ToString();
+            }
 
             if(root.Type == "<end of calculations description>")
             {
@@ -157,9 +172,9 @@ namespace Compiler.Translation
 
             if (root.Type == "<FUNCTION>")
             {
-                if(root.Childs[0].Value == "read")
+                if(root.Childs.Last().Value == "read")
                     _isRead = true;
-                if(root.Childs[0].Value == "write")
+                if(root.Childs.Last().Value == "write")
                     _isWrite = true;
 
                 Identifier s = root.Childs[2];
@@ -174,6 +189,7 @@ namespace Compiler.Translation
                 root.Type == "<CALCULATIONS DESCRIPTION>" ||
                 root.Type == "<OPERATIONS LIST>")
             {
+                root.Childs.Reverse();
                 foreach (var child in root.Childs)
                 {
                     OutTree(child);
@@ -202,7 +218,7 @@ namespace Compiler.Translation
         {
             List<Identifier> newExpression = new List<Identifier>();
             Stack<Identifier> operations = new Stack<Identifier>();
-
+            expression.Reverse();
             foreach (var child in expression)
             {
                 if(child.Type == "<variable>" || child.Type == "<constant>")
@@ -229,13 +245,14 @@ namespace Compiler.Translation
                         operations.Pop();
                     }
                 }
-                else if (child.Type == "<binary operator>" || child.Type == "<unary operator NOT>")
+                else if (child.Type == "<binary operator>" || child.Type == "<unary operator>")
                 {
-                    while (operations.Any() && _priority[child.Value] < _priority[operations.Peek().Value])
+                    while (operations.Any() && _priority.ContainsKey(operations.Peek().Value) && _priority[child.Value] < _priority[operations.Peek().Value])
                     {
                         newExpression.Add(operations.Peek());
                         operations.Pop();
                     }
+                    operations.Push(child);
                 }
             }
 

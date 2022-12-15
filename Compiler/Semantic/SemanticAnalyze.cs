@@ -107,6 +107,7 @@ namespace Compiler.Semantic
 	        new Reduction ( "<FUNCTION>", 5 ), // 18
 	        new Reduction ( "<OPERATOR>", 8 ), // 19
         };
+
         /// <summary>
         /// Словарь правил перехода для нетерминалов
         /// </summary>
@@ -125,7 +126,7 @@ namespace Compiler.Semantic
             };
 
         /// <summary>
-        /// Cловарь правил переноса - свертки
+        /// Cловарь правил переноса - свертки для терминалов
         /// </summary>
         private Dictionary<string, Dictionary<int, Action>> _shiftAndReduceRules =
             new Dictionary<string, Dictionary<int, Action>>()
@@ -162,6 +163,7 @@ namespace Compiler.Semantic
                         { 11, new Action('S', 20) },
                         { 12, new Action('S', 20) },
                         { 21, new Action('S', 32) },
+                        { 24, new Action('S', 32) },
                         { 26, new Action('S', 32) },
                         { 28, new Action('S', 32) },
                         { 35, new Action('S', 10) },
@@ -189,14 +191,14 @@ namespace Compiler.Semantic
                         { 24, new Action('S', 24) },
                         { 26, new Action('S', 24) },
                         { 28, new Action('S', 24) },
-                        { 39, new Action('R', 24) } } },
+                        { 39, new Action('S', 24) } } },
 
                 {"<binary operator>",
                     new Dictionary<int, Action>(){
                         { 22, new Action('S', 26) },
                         { 25, new Action('S', 26) },
                         { 29, new Action('S', 26) },
-                        { 40, new Action('R', 26) } } },
+                        { 40, new Action('S', 26) } } },
 
                 {"<opening bracket>",
                     new Dictionary<int, Action>(){
@@ -242,7 +244,7 @@ namespace Compiler.Semantic
                 {"<then block>",
                     new Dictionary<int, Action>(){
                         { 40, new Action('S', 41) },
-                        { 25, new Action('S', 12) } } },
+                        { 25, new Action('R', 12) } } },
 
                 {"<else block>",
                     new Dictionary<int, Action>(){
@@ -250,8 +252,7 @@ namespace Compiler.Semantic
 
                 {"<end if operator>",
                     new Dictionary<int, Action>(){
-                        { 44, new Action('S', 45) } } },
-
+                        { 44, new Action('S', 45) } } }
             };
 
         /// <summary>
@@ -315,7 +316,6 @@ namespace Compiler.Semantic
             _stateStack = new Stack<int>();
             _symbolStack = new Stack<Identifier>();
         }
-
         public void CompileError()
         {
             if(_stateStack.Count > 0 && _symbolStack.Peek().Type == NONTERMINAL)
@@ -339,7 +339,6 @@ namespace Compiler.Semantic
             }
             Error += " в строке: " + _inputString[0].Line;
         }
-
         public bool AnalyzeSyntax()
         {
             _inputString.Add(new Identifier(NONTERMINAL, END_MARKER));
@@ -370,7 +369,6 @@ namespace Compiler.Semantic
                 return false;
             }
         }
-
         private void Reduce(Reduction reduction)
         {
             Identifier ident = new Identifier(NONTERMINAL, reduction.Symbol);
@@ -394,7 +392,6 @@ namespace Compiler.Semantic
             }
             return false;
         }
-
         private bool TryShiftReduce()
         {
             if (_shiftAndReduceRules.ContainsKey(_inputString[0].Type))
@@ -411,7 +408,6 @@ namespace Compiler.Semantic
             }
             return false;
         }
-
         private bool TryShift()
         {
             if (_shiftAndReduceRules.ContainsKey(_inputString[0].Type))
@@ -431,7 +427,6 @@ namespace Compiler.Semantic
             }
             return false;
         }
-
         private bool TryGoto()
         {
             if (_symbolStack.Count != 0)

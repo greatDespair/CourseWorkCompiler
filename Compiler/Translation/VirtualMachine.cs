@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,16 +16,9 @@ namespace Compiler.Translation
         private int _ip = 0;
         public VirtualMachine(string Path)
         {
-            char[] buff = new char[10];
             try
             {
-                _read = new StreamReader(Path);
-                while (!_read.EndOfStream)
-                {
-                    _read.ReadBlock(buff);
-                    _program.Add(buff.ToString());
-                }
-                _read.Close();
+                _program.AddRange(File.ReadAllLines(Path));
             }
             catch (Exception ex)
             {
@@ -33,6 +27,9 @@ namespace Compiler.Translation
 
         }
 
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool AllocConsole();
         public void Run()
         {
             if (_program.Count != 0)
@@ -50,6 +47,10 @@ namespace Compiler.Translation
 
                     if (op == "IFETCH")
                     {
+                        if (!_variables.ContainsKey(arg))
+                        {
+                            _variables.Add(arg, false);
+                        }
                         _stack.Push(_variables[arg]);
                         _ip += 2;
                     }
@@ -62,7 +63,10 @@ namespace Compiler.Translation
 
                     if (op == "IPUSH")
                     {
-                        _stack.Push(Convert.ToBoolean(arg));
+                        if (arg == "1")
+                            _stack.Push(true);
+                        else
+                            _stack.Push(false);
                         _ip += 2;
                     }
 
@@ -116,12 +120,25 @@ namespace Compiler.Translation
 
                     if (op == "IWRITE")
                     {
+                        AllocConsole();
                         Console.WriteLine(arg + ": " + _variables[arg] + "\n");
                         _ip += 2;
                     }
 
+                    if (op == "JZ")
+                    {
+                        bool v1 = _stack.Peek();
+                        _stack.Pop();
+                        if (!v1)
+                            _ip = Convert.ToInt32(arg);
+                    }
+
+                    if (op == "JMP")
+                        _ip = Convert.ToInt32(arg);
+
                     if (op == "IREAD")
                     {
+                        AllocConsole();
                         bool temp;
                         Console.WriteLine("Ввод " + arg + ": ");
                         try
