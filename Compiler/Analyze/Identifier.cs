@@ -14,6 +14,31 @@ namespace Compiler
         public int Column { get; set; }
         public Identifier? Parent { get; set; }
         public List<Identifier> Childs { get; set; }
+
+        public Semantic.SemanticAnalyze SemanticAnalyze
+        {
+            get => default;
+            set
+            {
+            }
+        }
+
+        public AnalyzeText AnalyzeText
+        {
+            get => default;
+            set
+            {
+            }
+        }
+
+        public Translation.Translator Translator
+        {
+            get => default;
+            set
+            {
+            }
+        }
+
         public Identifier(string value, string type, int line, int column)
         {
             Value = value;
