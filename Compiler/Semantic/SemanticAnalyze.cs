@@ -105,7 +105,7 @@ namespace Compiler.Semantic
 	        new Reduction ( "<OPERAND>", 1 ), // 16
 	        new Reduction ( "<OPERAND>", 1 ), // 17
 	        new Reduction ( "<FUNCTION>", 5 ), // 18
-	        new Reduction ( "<OPERATOR>", 8 ), // 19
+	        new Reduction ( "<OPERATOR>", 6 ), // 19
         };
 
         /// <summary>
@@ -117,10 +117,10 @@ namespace Compiler.Semantic
                 {"<VARIABLES DECLARATION>", new Dictionary<int, int>(){ { 0, 1 } } },
                 {"<CALCULATIONS DESCRIPTION>", new Dictionary<int, int>(){ { 1, 2 } } },
                 {"<VARIABLES LIST>", new Dictionary<int, int>(){ { 3, 4 }, { 35, 36 } } },
-                {"<OPERATIONS LIST>", new Dictionary<int, int>(){ { 11, 12 }, { 41, 42 }, { 43, 44 } } },
-                {"<ASSIGNMENT>", new Dictionary<int, int>(){ { 11, 17 }, { 12, 14 }, { 41, 17}, { 42, 14}, { 43, 17}, { 44, 13} } },
-                {"<FUNCTION>", new Dictionary<int, int>(){ { 11, 18 }, { 12, 15 }, { 41, 18 }, { 42, 15 }, { 43, 18 }, { 44, 15 } } },
-                {"<OPERATOR>", new Dictionary<int, int>(){ { 11, 19 }, { 12, 16 }, { 41, 19 }, { 42, 16 }, { 43, 19 }, { 44, 16 } } },
+                {"<OPERATIONS LIST>", new Dictionary<int, int>(){ { 11, 12 }, { 41, 44 } } },
+                {"<ASSIGNMENT>", new Dictionary<int, int>(){ { 11, 17 }, { 12, 14 }, { 41, 17}, { 44, 13} } },
+                {"<FUNCTION>", new Dictionary<int, int>(){ { 11, 18 }, { 12, 15 }, { 41, 18 },  { 44, 15 } } },
+                {"<OPERATOR>", new Dictionary<int, int>(){ { 11, 19 }, { 12, 16 }, { 41, 19 },  { 44, 16 } } },
                 {"<EXPRESSION>", new Dictionary<int, int>(){ { 21, 22 }, { 24, 25 }, { 26, 27 }, { 28, 29 }, { 48, 29 }, { 39, 40 } } },
                 {"<OPERAND>", new Dictionary<int, int>(){ { 21, 31 }, { 24, 31 }, { 26, 31 }, { 28, 31 }, { 48, 31 }, { 39, 31 } } },
             };
@@ -169,8 +169,6 @@ namespace Compiler.Semantic
                         { 35, new Action('S', 10) },
                         { 39, new Action('S', 32) },
                         { 41, new Action('S', 20) },
-                        { 42, new Action('S', 20) },
-                        { 43, new Action('S', 20) },
                         { 44, new Action('S', 20) } } },
 
                 {"<begin of calculations description>",
@@ -228,29 +226,25 @@ namespace Compiler.Semantic
                         { 11, new Action('S', 34) },
                         { 12, new Action('S', 34) },
                         { 41, new Action('S', 34) },
-                        { 42, new Action('S', 34) },
-                        { 43, new Action('S', 34) },
                         { 44, new Action('S', 34) } } },
 
-                {"<if operator>",
+                {"<while operator>",
                     new Dictionary<int, Action>(){
                         { 11, new Action('S', 39) },
                         { 12, new Action('S', 39) },
                         { 41, new Action('S', 39) },
-                        { 42, new Action('S', 39) },
-                        { 43, new Action('S', 39) },
                         { 44, new Action('S', 39) } } },
 
-                {"<then block>",
+                {"<do block>",
                     new Dictionary<int, Action>(){
                         { 40, new Action('S', 41) },
                         { 25, new Action('R', 12) } } },
 
-                {"<else block>",
+                /*{"<else block>",
                     new Dictionary<int, Action>(){
                         { 42, new Action('S', 43) } } },
-
-                {"<end if operator>",
+*/
+                {"<end while operator>",
                     new Dictionary<int, Action>(){
                         { 44, new Action('S', 45) } } }
             };
@@ -303,10 +297,10 @@ namespace Compiler.Semantic
             { "<closing bracket>", ")" },
             { "<constant>", "constant" },
             { "<function name>", "function" },
-            { "<if operator>", "if" },
-            { "<then block>", "then" },
+            { "<while operator>", "while" },
+            { "<do block>", "do" },
             { "<else block>", "else" },
-            { "<end if operator>", "end_if" }
+            { "<end while operator>", "end_while" }
         };
 
         public SemanticAnalyze(List<Identifier> lexems)

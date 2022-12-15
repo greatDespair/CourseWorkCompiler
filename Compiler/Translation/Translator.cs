@@ -151,17 +151,14 @@ namespace Compiler.Translation
                 int adress1 = _ip;
                 GenerateAsm("0");
 
-                Identifier s2 = root.Childs[root.Childs.Count - 4];
+                Identifier s2 = root.Childs[2];
                 OutTree(s2);
                 GenerateAsm(COMMANDS.JMP.ToString());
                 int adress2 = _ip;
                 GenerateAsm("0");
 
                 _commands[adress1] = _ip.ToString();
-
-                Identifier s3 = root.Childs[2];
-                OutTree(s3);
-                _commands[adress2] = _ip.ToString();
+                _commands[adress2] = adress1.ToString();
             }
 
             if(root.Type == "<end of calculations description>")

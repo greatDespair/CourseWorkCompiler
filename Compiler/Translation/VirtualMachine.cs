@@ -121,6 +121,10 @@ namespace Compiler.Translation
                     if (op == "IWRITE")
                     {
                         AllocConsole();
+                        if (!_variables.ContainsKey(arg))
+                        {
+                            _variables.Add(arg, false);
+                        }
                         Console.WriteLine(arg + ": " + _variables[arg] + "\n");
                         _ip += 2;
                     }
