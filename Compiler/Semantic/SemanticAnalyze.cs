@@ -377,6 +377,10 @@ namespace Compiler.Semantic
             
             _symbolStack.Push(ident);
         }
+        /// <summary>
+        /// Свертка для нетерминалов
+        /// </summary>
+        /// <returns></returns>
         private bool TryReduce()
         {
             if(_reduceRules.ContainsKey(_stateStack.Peek()))
@@ -386,6 +390,10 @@ namespace Compiler.Semantic
             }
             return false;
         }
+        /// <summary>
+        /// Свертка для терминалов
+        /// </summary>
+        /// <returns></returns>
         private bool TryShiftReduce()
         {
             if (_shiftAndReduceRules.ContainsKey(_inputString[0].Type))
@@ -402,6 +410,10 @@ namespace Compiler.Semantic
             }
             return false;
         }
+        /// <summary>
+        /// Переход для терминалов
+        /// </summary>
+        /// <returns></returns>
         private bool TryShift()
         {
             if (_shiftAndReduceRules.ContainsKey(_inputString[0].Type))
@@ -421,6 +433,10 @@ namespace Compiler.Semantic
             }
             return false;
         }
+        /// <summary>
+        /// Переход для нетерминала
+        /// </summary>
+        /// <returns></returns>
         private bool TryGoto()
         {
             if (_symbolStack.Count != 0)

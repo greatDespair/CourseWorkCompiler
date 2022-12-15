@@ -87,7 +87,7 @@
             this.Controls.Add(this.CompileButton);
             this.Controls.Add(this.CodeField);
             this.Name = "MainForm";
-            this.Text = "Course Project 20VP1";
+            this.Text = "Course Project 20VP1 - Akmashev, Kosenko, Sadykov";
             this.ResumeLayout(false);
             this.PerformLayout();
 

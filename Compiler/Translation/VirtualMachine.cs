@@ -24,7 +24,6 @@ namespace Compiler.Translation
             {
                 throw new Exception("Ошибка чтения файла");
             }
-
         }
 
         [DllImport("kernel32.dll", SetLastError = true)]
