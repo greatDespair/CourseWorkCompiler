@@ -33,21 +33,6 @@ namespace Compiler.Semantic
                 RemoveCountSymbols = rcs;
             }
 
-            public MainForm MainForm
-            {
-                get => default;
-                set
-                {
-                }
-            }
-
-            public MainForm MainForm1
-            {
-                get => default;
-                set
-                {
-                }
-            }
         }
         /// <summary>
         /// Действие
@@ -347,7 +332,7 @@ namespace Compiler.Semantic
                 Error = "Найден символ \"" + _inputString[0].Value +
                     "\" но ожидалось " + expectedSymbol;
             }
-            Error += " в строке: " + _inputString[0].Line;
+            Error += " в строке: " + _inputString[0].Line + 1;
         }
         public bool AnalyzeSyntax()
         {

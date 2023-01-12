@@ -103,7 +103,7 @@ namespace Compiler.Translation
                         _stack.Pop();
                         bool v2 = _stack.Peek();
                         _stack.Pop();
-                        bool result = !v1 || v2;
+                        bool result = v1 || !v2;
                         _stack.Push(result);
                         _ip++;
                     }
