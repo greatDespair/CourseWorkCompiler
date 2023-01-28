@@ -24,7 +24,7 @@ namespace Compiler.Translation
             ISTORE,
             IPUSH,
             IPOP,
-            IIMP,
+            IEQU,
             IAND,
             IOR,
             INOT,
@@ -44,7 +44,7 @@ namespace Compiler.Translation
             {"not", 3 },
             {"and", 2 },
             { "or", 1 },
-            {"imp", 0 }
+            {"equ", 0 }
         };
 
         private int _ip = 0;
@@ -87,8 +87,8 @@ namespace Compiler.Translation
                             GenerateAsm(COMMANDS.IAND.ToString());
                     if (item.Value == "or")
                         GenerateAsm(COMMANDS.IOR.ToString());
-                    if (item.Value == "imp")
-                        GenerateAsm(COMMANDS.IIMP.ToString());
+                    if (item.Value == "equ")
+                        GenerateAsm(COMMANDS.IEQU.ToString());
                     if (item.Value == "not")
                         GenerateAsm(COMMANDS.INOT.ToString());
                 }

@@ -244,14 +244,14 @@ namespace Compiler.Semantic
                         { 41, new Action('S', 34) },
                         { 44, new Action('S', 34) } } },
 
-                {"<while operator>",
+                {"<until operator>",
                     new Dictionary<int, Action>(){
                         { 11, new Action('S', 39) },
                         { 12, new Action('S', 39) },
                         { 41, new Action('S', 39) },
                         { 44, new Action('S', 39) } } },
 
-                {"<do block>",
+                {"<repeat block>",
                     new Dictionary<int, Action>(){
                         { 40, new Action('S', 41) },
                         { 25, new Action('R', 12) } } },
@@ -313,8 +313,8 @@ namespace Compiler.Semantic
             { "<closing bracket>", ")" },
             { "<constant>", "constant" },
             { "<function name>", "function" },
-            { "<while operator>", "while" },
-            { "<do block>", "do" },
+            { "<until operator>", "until" },
+            { "<repeat block>", "repeat" },
             { "<else block>", "else" },
             { "<end while operator>", "end_while" }
         };
