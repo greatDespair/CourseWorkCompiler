@@ -121,7 +121,7 @@ namespace Compiler.Semantic
 	        new Reduction ( "<OPERAND>", 1 ), // 16
 	        new Reduction ( "<OPERAND>", 1 ), // 17
 	        new Reduction ( "<FUNCTION>", 5 ), // 18
-	        new Reduction ( "<OPERATOR>", 6 ), // 19
+	        new Reduction ( "<OPERATOR>", 5 ), // 19
         };
 
         /// <summary>
@@ -133,12 +133,12 @@ namespace Compiler.Semantic
                 {"<VARIABLES DECLARATION>", new Dictionary<int, int>(){ { 0, 1 } } },
                 {"<CALCULATIONS DESCRIPTION>", new Dictionary<int, int>(){ { 1, 2 } } },
                 {"<VARIABLES LIST>", new Dictionary<int, int>(){ { 3, 4 }, { 35, 36 } } },
-                {"<OPERATIONS LIST>", new Dictionary<int, int>(){ { 11, 12 }, { 41, 44 } } },
-                {"<ASSIGNMENT>", new Dictionary<int, int>(){ { 11, 17 }, { 12, 14 }, { 41, 17}, { 44, 12} } },
-                {"<FUNCTION>", new Dictionary<int, int>(){ { 11, 18 }, { 12, 15 }, { 41, 18 },  { 44, 15 } } },
-                {"<OPERATOR>", new Dictionary<int, int>(){ { 11, 19 }, { 12, 16 }, { 41, 19 },  { 44, 16 } } },
-                {"<EXPRESSION>", new Dictionary<int, int>(){ { 21, 22 }, { 24, 25 }, { 26, 27 }, { 28, 29 }, { 48, 29 }, { 39, 40 } } },
-                {"<OPERAND>", new Dictionary<int, int>(){ { 21, 31 }, { 24, 31 }, { 26, 31 }, { 28, 31 }, { 48, 31 }, { 39, 31 } } },
+                {"<OPERATIONS LIST>", new Dictionary<int, int>(){ { 11, 12 }, { 39, 40 }, { 40, 41} } },
+                {"<ASSIGNMENT>", new Dictionary<int, int>(){ { 11, 17 }, { 12, 14 }, { 39, 17}, { 40, 12} } },
+                {"<FUNCTION>", new Dictionary<int, int>(){ { 11, 18 }, { 12, 15 }, { 39, 18 },  { 40, 15 } } },
+                {"<OPERATOR>", new Dictionary<int, int>(){ { 11, 19 }, { 12, 16 }, { 39, 19 },  { 40, 16 } } },
+                {"<EXPRESSION>", new Dictionary<int, int>(){ { 21, 22 }, { 24, 25 }, { 26, 27 }, { 28, 29 }, { 48, 29 }, { 41, 44 } } },
+                {"<OPERAND>", new Dictionary<int, int>(){ { 21, 31 }, { 24, 31 }, { 26, 31 }, { 28, 31 }, { 48, 31 }, { 41, 31 } } },
             };
 
         /// <summary>
@@ -164,7 +164,7 @@ namespace Compiler.Semantic
                         { 6, new Action('S', 7) },
                         { 22, new Action('S', 23) },
                         { 37, new Action('S', 38) },
-                        { 45, new Action('S', 46) },
+                        { 44, new Action('S', 46) },
                         { 25, new Action('R', 12) } } },
 
                 {"<comma>",
@@ -183,9 +183,9 @@ namespace Compiler.Semantic
                         { 26, new Action('S', 32) },
                         { 28, new Action('S', 32) },
                         { 35, new Action('S', 10) },
-                        { 39, new Action('S', 32) },
-                        { 41, new Action('S', 20) },
-                        { 44, new Action('S', 20) } } },
+                        { 41, new Action('S', 32) },
+                        { 39, new Action('S', 20) },
+                        { 40, new Action('S', 20) } } },
 
                 {"<begin of calculations description>",
                     new Dictionary<int, Action>(){
@@ -221,7 +221,7 @@ namespace Compiler.Semantic
                         { 26, new Action('S', 28) },
                         { 28, new Action('S', 28) },
                         { 34, new Action('S', 35) },
-                        { 39, new Action('S', 28) } } },
+                        { 41, new Action('S', 28) } } },
 
                 {"<closing bracket>",
                     new Dictionary<int, Action>(){
@@ -235,7 +235,7 @@ namespace Compiler.Semantic
                         { 24, new Action('S', 33) },
                         { 26, new Action('S', 33) },
                         { 28, new Action('S', 33) },
-                        { 39, new Action('S', 33) } } },
+                        { 41, new Action('S', 33) } } },
 
                 {"<function name>",
                     new Dictionary<int, Action>(){
@@ -246,23 +246,15 @@ namespace Compiler.Semantic
 
                 {"<until operator>",
                     new Dictionary<int, Action>(){
+                        { 40, new Action('S', 41) },
+                        { 25, new Action('R', 12) } } },
+
+                {"<repeat block>",
+                    new Dictionary<int, Action>(){
                         { 11, new Action('S', 39) },
                         { 12, new Action('S', 39) },
                         { 41, new Action('S', 39) },
                         { 44, new Action('S', 39) } } },
-
-                {"<repeat block>",
-                    new Dictionary<int, Action>(){
-                        { 40, new Action('S', 41) },
-                        { 25, new Action('R', 12) } } },
-
-                /*{"<else block>",
-                    new Dictionary<int, Action>(){
-                        { 42, new Action('S', 43) } } },
-*/
-                {"<end while operator>",
-                    new Dictionary<int, Action>(){
-                        { 44, new Action('S', 45) } } }
             };
 
         /// <summary>

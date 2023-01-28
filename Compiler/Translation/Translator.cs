@@ -28,8 +28,7 @@ namespace Compiler.Translation
             IAND,
             IOR,
             INOT,
-            JZ,
-            JMP,
+            JNZ,
             IREAD,
             IWRITE,
             HALT
@@ -41,10 +40,10 @@ namespace Compiler.Translation
 
         private Dictionary<string, int> _priority = new Dictionary<string, int>()
         {
-            {"not", 3 },
-            {"and", 2 },
+            { "not", 3 },
+            { "and", 2 },
             { "or", 1 },
-            {"equ", 0 }
+            { "equ", 0 }
         };
 
         private int _ip = 0;
@@ -144,19 +143,12 @@ namespace Compiler.Translation
             if(root.Type == "<OPERATOR>")
             {
                 int expressionStart = _ip;
-                Identifier s1 = root.Childs[root.Childs.Count - 2];
-                OutTree(s1);
-                GenerateAsm(COMMANDS.JZ.ToString());
-                int adress1 = _ip;
-                GenerateAsm("0");
-
-                Identifier s2 = root.Childs[2];
+                Identifier s2 = root.Childs[1];
                 OutTree(s2);
-                GenerateAsm(COMMANDS.JMP.ToString());
+                GenerateAsm(COMMANDS.JNZ.ToString());
                 int adress2 = _ip;
                 GenerateAsm("0");
 
-                _commands[adress1] = _ip.ToString();
                 _commands[adress2] = expressionStart.ToString();
             }
 

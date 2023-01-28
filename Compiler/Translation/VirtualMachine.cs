@@ -97,7 +97,7 @@ namespace Compiler.Translation
                         _ip++;
                     }
 
-                    if (op == "IIMP")
+                    if (op == "IEQU")
                     {
                         bool v1 = _stack.Peek();
                         _stack.Pop();
@@ -128,11 +128,11 @@ namespace Compiler.Translation
                         _ip += 2;
                     }
 
-                    if (op == "JZ")
+                    if (op == "JNZ")
                     {
                         bool v1 = _stack.Peek();
                         _stack.Pop();
-                        if (!v1)
+                        if (v1)
                             _ip = Convert.ToInt32(arg);
                         else
                         {
