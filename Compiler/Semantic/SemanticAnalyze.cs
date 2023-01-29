@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Compiler.Semantic
 {
-    public class SemanticAnalyze
+    public class SyntactialAnalyzer
     {
         #region [Структуры для определения правил переноса и свертки]
         /// <summary>
@@ -311,7 +311,7 @@ namespace Compiler.Semantic
             { "<end while operator>", "end_while" }
         };
 
-        public SemanticAnalyze(List<Identifier> lexems)
+        public SyntactialAnalyzer(List<Identifier> lexems)
         {
             Error = "Успешная проверка семантики. CODEX00";
             _inputString = lexems;

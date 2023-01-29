@@ -1,7 +1,7 @@
 ﻿
 namespace Compiler
 {
-    public class AnalyzeText
+    public class LexicalAnalyzer
     {
         delegate void StateDelegate();
         public string CurrentError { get; private set; }
@@ -13,9 +13,9 @@ namespace Compiler
         int ColumnCounter { get; set; }
         char CurrentSymbol { get; set; }
         private List<Identifier> CurrentLexems{ get; set; }
-        public AnalyzeText(string coreText)
+        public LexicalAnalyzer(string coreText)
         {
-            CurrentError = "Успешный анализ. CODE: X00";
+            CurrentError = "X00";
             stateMap = new Dictionary<char, Action>();
             CurrentLexems = new List<Identifier>();
             stateMap.Add('1', StateNum);

@@ -12,58 +12,112 @@ namespace Compiler
             CodeField.AcceptsTab = true;
         }
 
-        private void CompileButton_Click(object sender, EventArgs e)
+        private void OpenFileMenuItem_Click(object sender, EventArgs e)
         {
-            ConsoleView.Items.Add("------------" + DateTime.Now.ToString(new CultureInfo("ru-RU")) + "------------");
-            if(CodeField.Text == "")
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Text files(*.txt)|*.txt|All files(*.*)|*.*";
+
+            if (openFileDialog.ShowDialog() == DialogResult.Cancel)
+                return;
+            
+            string filename = openFileDialog.FileName;
+            
+            string fileText = File.ReadAllText(filename);
+            CodeField.Text = fileText;
+        }
+
+        private void SaveAsMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Text files(*.txt)|*.txt|All files(*.*)|*.*";
+
+            if (saveFileDialog.ShowDialog() == DialogResult.Cancel)
+                return;
+            
+            string filename = saveFileDialog.FileName;
+            
+            File.WriteAllText(filename, CodeField.Text);
+        }
+
+        private void ExitMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void CompileMenuItem_Click(object sender, EventArgs e)
+        {
+            Compile();
+        }
+
+        private void RunCurrentMenuItem_Click(object sender, EventArgs e)
+        {
+            Run(true);
+        }
+
+        private void RunOtherMenuItem_Click(object sender, EventArgs e)
+        {
+            Run(false);
+        }
+        private void Run(bool isCurrent)
+        {
+            if(isCurrent)
             {
-                ConsoleView.Items.Add("Исходный код программы отсутствует");
+                Compile();
+
+                VirtualMachine vm = new VirtualMachine(Directory.GetCurrentDirectory() + "/TranslatedCode.zhr");
+                vm.Run();
+            }
+            else
+            {
+                if (File.Exists(Directory.GetCurrentDirectory() + "/TranslatedCode.zhr"))
+                {
+                    VirtualMachine vm = new VirtualMachine(Directory.GetCurrentDirectory() + "/TranslatedCode.zhr");
+                    vm.Run();
+                }
+            }
+        }
+        private void Compile()
+        {
+            string dateTime = DateTime.Now.ToString(new CultureInfo("ru-RU")) + " >> ";
+            if (CodeField.Text == "")
+            {
+                ConsoleView.Items.Add(dateTime + "Исходный код программы отсутствует");
                 return;
             }
 
-            AnalyzeText lexemsAnalyzer = new AnalyzeText(Convert.ToString(CodeField.Text));
+            LexicalAnalyzer lexemsAnalyzer = new LexicalAnalyzer(Convert.ToString(CodeField.Text));
             if (lexemsAnalyzer.Analyze())
             {
                 var lexems = lexemsAnalyzer.GetLexemsAsList();
                 List<Identifier> InputSemantic = new List<Identifier>();
                 foreach (var lexeme in lexems)
                 {
-                    if(lexeme.Type != "")
+                    if (lexeme.Type != "")
                     {
                         InputSemantic.Add(lexeme);
                     }
                 }
 
-                SemanticAnalyze semanticAnalyzer = new SemanticAnalyze(InputSemantic);
-                if(semanticAnalyzer.AnalyzeSyntax())
+                SyntactialAnalyzer semanticAnalyzer = new SyntactialAnalyzer(InputSemantic);
+                if (semanticAnalyzer.AnalyzeSyntax())
                 {
                     Translator translator = new Translator();
                     translator.OutTree(semanticAnalyzer._root);
 
 
-                        translator.SaveCommands(Directory.GetCurrentDirectory() + "/program.zhr");
+                    translator.SaveCommands(Directory.GetCurrentDirectory() + "/TranslatedCode.zhr");
 
 
-                    ConsoleView.Items.Add(translator._error);
+                    ConsoleView.Items.Add(dateTime + "Сборка произведена. Код: X00");
                     return;
                 }
-                ConsoleView.Items.Add(semanticAnalyzer.Error);
+                ConsoleView.Items.Add(dateTime + semanticAnalyzer.Error);
                 return;
             }
-            ConsoleView.Items.Add(lexemsAnalyzer.CurrentError);
-        }
-
-        private void RunButton_Click(object sender, EventArgs e)
-        {
-            if(File.Exists(Directory.GetCurrentDirectory() + "/program.zhr"))
-            {
-                VirtualMachine vm = new VirtualMachine(Directory.GetCurrentDirectory() + "/program.zhr");
-                vm.Run();
-            }
+            if (lexemsAnalyzer.CurrentError == "X00")
+                ConsoleView.Items.Add(dateTime + "Неизвестная лексическая ошибка");
             else
-            {
-                CompileButton_Click(sender, e);
-            }
+                ConsoleView.Items.Add(dateTime + lexemsAnalyzer.CurrentError);
         }
     }
 }
