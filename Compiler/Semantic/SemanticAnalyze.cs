@@ -133,7 +133,7 @@ namespace Compiler.Semantic
                 {"<VARIABLES DECLARATION>", new Dictionary<int, int>(){ { 0, 1 } } },
                 {"<CALCULATIONS DESCRIPTION>", new Dictionary<int, int>(){ { 1, 2 } } },
                 {"<VARIABLES LIST>", new Dictionary<int, int>(){ { 3, 4 }, { 35, 36 } } },
-                {"<OPERATIONS LIST>", new Dictionary<int, int>(){ { 11, 12 }, { 39, 40 }, { 40, 41} } },
+                {"<OPERATIONS LIST>", new Dictionary<int, int>(){ { 11, 12 }, { 39, 40 } } },
                 {"<ASSIGNMENT>", new Dictionary<int, int>(){ { 11, 17 }, { 12, 14 }, { 39, 17}, { 40, 12} } },
                 {"<FUNCTION>", new Dictionary<int, int>(){ { 11, 18 }, { 12, 15 }, { 39, 18 },  { 40, 15 } } },
                 {"<OPERATOR>", new Dictionary<int, int>(){ { 11, 19 }, { 12, 16 }, { 39, 19 },  { 40, 16 } } },
@@ -241,8 +241,8 @@ namespace Compiler.Semantic
                     new Dictionary<int, Action>(){
                         { 11, new Action('S', 34) },
                         { 12, new Action('S', 34) },
-                        { 41, new Action('S', 34) },
-                        { 44, new Action('S', 34) } } },
+                        { 39, new Action('S', 34) },
+                        { 40, new Action('S', 34) } } },
 
                 {"<until operator>",
                     new Dictionary<int, Action>(){

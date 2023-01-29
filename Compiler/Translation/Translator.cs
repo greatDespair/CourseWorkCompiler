@@ -143,12 +143,14 @@ namespace Compiler.Translation
             if(root.Type == "<OPERATOR>")
             {
                 int expressionStart = _ip;
+                Identifier s1 = root.Childs[root.Childs.Count - 2];
+                OutTree(s1);
+
                 Identifier s2 = root.Childs[1];
                 OutTree(s2);
                 GenerateAsm(COMMANDS.JNZ.ToString());
                 int adress2 = _ip;
                 GenerateAsm("0");
-
                 _commands[adress2] = expressionStart.ToString();
             }
 
