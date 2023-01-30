@@ -3,6 +3,7 @@ namespace Compiler
 {
     public class LexicalAnalyzer
     {
+        private const int MAX_LENGTH = 9;
         delegate void StateDelegate();
         public string CurrentError { get; private set; }
         StateDelegate States { get; set; }
@@ -164,7 +165,7 @@ namespace Compiler
 
                     if(lexem.Type == "")
                     {
-                        if(lexem.Value.Length > 12)
+                        if(lexem.Value.Length > MAX_LENGTH)
                         {
                             Lexem = lexem.Value;
                             CurrentError = "Слишком длинное название для переменной " + Lexem + " в строке " + (LineCounter
