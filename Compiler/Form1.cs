@@ -62,10 +62,11 @@ namespace Compiler
         {
             if(isCurrent)
             {
-                Compile();
-
-                VirtualMachine vm = new VirtualMachine(Directory.GetCurrentDirectory() + "/TranslatedCode.zhr");
-                vm.Run();
+                if (Compile())
+                {
+                    VirtualMachine vm = new VirtualMachine(Directory.GetCurrentDirectory() + "/TranslatedCode.zhr");
+                    vm.Run();
+                }
             }
             else
             {
@@ -76,13 +77,13 @@ namespace Compiler
                 }
             }
         }
-        private void Compile()
+        private bool Compile()
         {
             string dateTime = DateTime.Now.ToString(new CultureInfo("ru-RU")) + " >> ";
             if (CodeField.Text == "")
             {
                 ConsoleView.Items.Add(dateTime + "Исходный код программы отсутствует");
-                return;
+                return false;
             }
 
             LexicalAnalyzer lexemsAnalyzer = new LexicalAnalyzer(Convert.ToString(CodeField.Text));
@@ -109,15 +110,16 @@ namespace Compiler
 
 
                     ConsoleView.Items.Add(dateTime + "Сборка произведена. Код: X00");
-                    return;
+                    return true;
                 }
                 ConsoleView.Items.Add(dateTime + semanticAnalyzer.Error);
-                return;
+                return false;
             }
             if (lexemsAnalyzer.CurrentError == "X00")
                 ConsoleView.Items.Add(dateTime + "Неизвестная лексическая ошибка");
             else
                 ConsoleView.Items.Add(dateTime + lexemsAnalyzer.CurrentError);
+            return false;
         }
     }
 }
