@@ -3,7 +3,7 @@ namespace Compiler
 {
     public class LexicalAnalyzer
     {
-        private const int MAX_LENGTH = 9;
+        private const int MAX_LENGTH = 7;
         delegate void StateDelegate();
         public string CurrentError { get; private set; }
         StateDelegate States { get; set; }
@@ -244,6 +244,14 @@ namespace Compiler
         public List<Identifier> GetLexemsAsList()
         {
             return CurrentLexems;
+        }
+
+        public Identifier Identifier
+        {
+            get => default;
+            set
+            {
+            }
         }
     }
 }

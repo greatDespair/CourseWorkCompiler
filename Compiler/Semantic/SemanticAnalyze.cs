@@ -320,6 +320,12 @@ namespace Compiler.Semantic
         }
         public void CompileError()
         {
+            if (_inputString[0].Type == "<variable>")
+            {
+                Error = "Найден символ " + _inputString[0].Value + ", но ожидалось " + "var";
+                return;
+            }
+
             if(_stateStack.Count > 0 && _symbolStack.Peek().Type == NONTERMINAL)
             {
                 Error = "Неопознанный символ \"" + _inputString[0].Value + "\" в " +
@@ -463,6 +469,14 @@ namespace Compiler.Semantic
         private bool TryAction()
         {
             return TryReduce() || TryShiftReduce() || TryShift();
+        }
+
+        public Identifier Identifier
+        {
+            get => default;
+            set
+            {
+            }
         }
     }
 }

@@ -12,6 +12,14 @@ namespace Compiler
             CodeField.AcceptsTab = true;
         }
 
+        public LexicalAnalyzer LexicalAnalyzer
+        {
+            get => default;
+            set
+            {
+            }
+        }
+
         private void OpenFileMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();

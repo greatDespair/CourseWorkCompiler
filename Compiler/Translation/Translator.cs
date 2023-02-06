@@ -273,5 +273,13 @@ namespace Compiler.Translation
         {
             return _crashed;
         }
+
+        public Identifier Identifier
+        {
+            get => default;
+            set
+            {
+            }
+        }
     }
 }
