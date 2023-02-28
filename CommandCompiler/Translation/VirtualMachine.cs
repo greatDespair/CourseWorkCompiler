@@ -26,9 +26,6 @@ namespace CommandCompiler.Translation
             }
         }
 
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool AllocConsole();
         public void Run()
         {
             if (_program.Count != 0)
@@ -119,7 +116,6 @@ namespace CommandCompiler.Translation
 
                     if (op == "IWRITE")
                     {
-                        AllocConsole();
                         if (!_variables.ContainsKey(arg))
                         {
                             _variables.Add(arg, false);
@@ -145,7 +141,6 @@ namespace CommandCompiler.Translation
 
                     if (op == "IREAD")
                     {
-                        AllocConsole();
                         bool temp;
                         Console.WriteLine("Ввод " + arg + ": ");
                         try

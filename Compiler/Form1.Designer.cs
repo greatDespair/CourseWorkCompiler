@@ -185,7 +185,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.MinimumSize = new System.Drawing.Size(700, 843);
             this.Name = "MainForm";
-            this.Text = "CourseWork 20VP1 - Malyshev";
+            this.Text = "CourseWork 20VP1";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
