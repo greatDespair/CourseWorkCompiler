@@ -7,7 +7,7 @@ Console.WriteLine("Добро пожаловать в программу Compile
 CommandsUI UI = new CommandsUI();
 while (true)
 {
-    Console.Write("compiler> ");
+    Console.Write(UI.FileName + "> ");
     string? command = Console.ReadLine();
 
     if(command == null)

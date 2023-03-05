@@ -12,37 +12,53 @@ namespace CommandCompiler.Commands
 {
     public class CommandsUI
     {
+        public string FileName { get; private set; }
         private string _currentCode;
         public string Error { get; }
 
-        private Dictionary<string, Command> _commands = new Dictionary<string, Command>() 
+        private Dictionary<string, Command> _commands = new Dictionary<string, Command>()
         {
             {"choose_file", new Command("choose_file",
-                "Производит выбор файла для сборки и запуска",
+                "Производит выбор файла для сборки и запуска \n" +
+                "choose_file [полный путь к файлу]",
+                "(выбор файла для работы)",
                 @"^choose_file\s\w*") },
-            
-            {"compile", new Command("compile", 
+
+            {"compile", new Command("compile",
                 "Без параметров: Производит сборку текущего выбранного файла\n" +
-                " С параметрами: Производит сборку файла по указанному пути",
+                " С параметрами: Производит сборку файла по указанному пути \n" +
+                "compile [полный путь к файлу]",
+                "(компиляция файла)",
                 @"^compile\w*")},
 
             {"runc", new Command("runc",
                 "Производит запуск текущего файла сборки",
+                "(запуск текущей сборки)",
                 "^runc$")},
 
             {"runlc", new Command("runlc",
                 "Производит запуск файла последней успешной сборки",
+                "(запуск последней успешной сборки)",
                 "^runlc$")},
 
             {"cat", new Command("cat",
                 "Без параметров: Выводит содержимое текущего выбранного файла\n" +
-                " С параметрами: Выводит содержимое файла по указанному пути",
+                " С параметрами: Выводит содержимое файла по указанному пути \n" +
+                "cat [полный путь к файлу]",
+                "(просмотр файла)",
                 @"^cat\w*")},
 
             {"help", new Command("help",
                 "Без параметров: Выводит список допуступных команд\n" +
-                " С параметрами: Выводит описание выбранной команды",
-                @"^help\w*")}
+                " С параметрами: Выводит описание выбранной команды \n" +
+                "help [наименование команды]",
+                "(список команд)",
+                @"^help\w*")},
+
+            {"exit", new Command("exit",
+                "Осуществляет выход из программы.",
+                "(выход из программы)",
+                "^exit$")}
         };
 
         public CommandsUI()
@@ -57,7 +73,7 @@ namespace CommandCompiler.Commands
             {
                 var currentCommand = _commands[commandName];
 
-                if(Regex.IsMatch(command, currentCommand.Pattern))
+                if (Regex.IsMatch(command, currentCommand.Pattern))
                 {
                     return true;
                 }
@@ -88,12 +104,12 @@ namespace CommandCompiler.Commands
                         else
                         {
                             Console.WriteLine("Список команд:");
-                            foreach(string currentCommand in _commands.Keys)
+                            foreach (Command currentCommand in _commands.Values)
                             {
-                                Console.WriteLine("> " + currentCommand);
+                                Console.WriteLine("> " + currentCommand.CommandName + " - " + currentCommand.ShortCommandDescription);
                             }
                         }
-                            break;
+                        break;
                     }
 
                 case "choose_file":
@@ -102,6 +118,14 @@ namespace CommandCompiler.Commands
                         {
                             _currentCode = File.ReadAllText(args[1]);
                             Console.WriteLine("Открыт файл по пути >> " + args[1]);
+                            if (args.Contains("/"))
+                            {
+                                FileName = args[1].Split("/").Last();
+                            }
+                            else
+                            {
+                                FileName = args[1].Split("\\").Last();
+                            }
                         }
                         catch (Exception e)
                         {

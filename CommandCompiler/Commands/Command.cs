@@ -9,13 +9,15 @@ namespace CommandCompiler.Commands
     public class Command
     {
         public string CommandName { get; }
+        public string ShortCommandDescription { get; }
         public string CommandDescription { get; }
         public string Pattern { get; }
 
-        public Command(string name, string decription, string pattern)
+        public Command(string name, string decription, string shortDescription, string pattern)
         {
             CommandName = name;
             CommandDescription = decription;
+            ShortCommandDescription = shortDescription;
             Pattern = pattern;
         }
     }
