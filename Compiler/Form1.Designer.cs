@@ -41,6 +41,7 @@
             this.RunCurrentMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.RunOtherMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
+            this.DescriptionMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -80,7 +81,8 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.файлToolStripMenuItem,
             this.сборкаToolStripMenuItem,
-            this.запускToolStripMenuItem});
+            this.запускToolStripMenuItem,
+            this.DescriptionMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(1245, 38);
@@ -172,6 +174,14 @@
             this.label1.TabIndex = 6;
             this.label1.Text = "Окно вывода";
             // 
+            // DescriptionMenuItem
+            // 
+            this.DescriptionMenuItem.ForeColor = System.Drawing.SystemColors.Control;
+            this.DescriptionMenuItem.Name = "DescriptionMenuItem";
+            this.DescriptionMenuItem.Size = new System.Drawing.Size(100, 34);
+            this.DescriptionMenuItem.Text = "Справка";
+            this.DescriptionMenuItem.Click += new System.EventHandler(this.DescriptionMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -208,5 +218,6 @@
         private ToolStripMenuItem RunCurrentMenuItem;
         private ToolStripMenuItem RunOtherMenuItem;
         private Label label1;
+        private ToolStripMenuItem DescriptionMenuItem;
     }
 }

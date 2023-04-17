@@ -129,5 +129,11 @@ namespace Compiler
                 ConsoleView.Items.Add(dateTime + lexemsAnalyzer.CurrentError);
             return false;
         }
+
+        private void DescriptionMenuItem_Click(object sender, EventArgs e)
+        {
+            HelpForm helpForm = new HelpForm();
+            helpForm.ShowDialog();
+        }
     }
 }
