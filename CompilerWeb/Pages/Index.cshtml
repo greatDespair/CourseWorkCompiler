@@ -1,0 +1,16 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1>Онлайн компилятор</h1>
+    <form method="post">
+    <label for="code">Введите код:</label><br>
+    <textarea id="code" name="code" rows="15" cols="80">@Model.CurrentProgramText</textarea><br>
+    <input type="submit" value="Компилировать">
+    </form>
+    <label for="code">Результат компиляции:</label><br>
+    <textarea id="result" name="result" rows="15" cols="80">@Model.CompileResult</textarea><br>
+</div>
