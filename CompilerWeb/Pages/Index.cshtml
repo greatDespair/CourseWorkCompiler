@@ -8,9 +8,13 @@
     <h1>Онлайн компилятор</h1>
     <form method="post">
     <label for="code">Введите код:</label><br>
-    <textarea id="code" name="code" rows="15" cols="80">@Model.CurrentProgramText</textarea><br>
-    <input type="submit" value="Компилировать">
+    <textarea id="code" name="code" rows="20" cols="100">@Model.CurrentProgramText</textarea><br>
+    <input type="submit" value="Компилировать"><br>
+    </form>
+    <form method="post">
+    <textarea id="code" name="code" rows="20" cols="100"></textarea><br>
+    <input type="submit" value="Запустить">
     </form>
     <label for="code">Результат компиляции:</label><br>
-    <textarea id="result" name="result" rows="15" cols="80">@Model.CompileResult</textarea><br>
+    <textarea id="result" name="result" rows="5" cols="100">@Model.CompileResult</textarea><br>
 </div>

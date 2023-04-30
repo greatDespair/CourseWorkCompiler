@@ -10,6 +10,7 @@ namespace CompilerWeb.Pages
         CompilerLib.Compiler compiler = new CompilerLib.Compiler();
         public string CompileResult { get; private set; } = "";
         public string CurrentProgramText { get; private set; } = "";
+        public List<string> compileLogs = new List<string>();
         public IndexModel(ILogger<IndexModel> logger)
         {
             _logger = logger;
@@ -22,7 +23,7 @@ namespace CompilerWeb.Pages
 
         public void OnPost(string code)
         {
-            CompileResult += compiler.Compile(code) + "\n";
+            CompileResult = compiler.Compile(code);
             CurrentProgramText = code;
         }
     }

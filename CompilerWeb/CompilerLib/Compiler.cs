@@ -11,12 +11,16 @@ namespace CompilerWeb.CompilerLib
         {
             string result = "";
             string dateTime = DateTime.Now.ToString(new CultureInfo("ru-RU")) + " >> ";
-            if (program == "")
+            if (program == null)
             {
                 result = dateTime + "Исходный код программы отсутствует";
                 return result;
             }
-
+            if(program.Trim() == "")
+            {
+                result = dateTime + "Исходный код программы отсутствует";
+                return result;
+            }
             LexicalAnalyzer lexemsAnalyzer = new LexicalAnalyzer(Convert.ToString(program));
             if (lexemsAnalyzer.Analyze())
             {

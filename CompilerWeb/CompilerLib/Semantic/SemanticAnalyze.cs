@@ -32,7 +32,6 @@ namespace Compiler.Semantic
                 Symbol = symbol;
                 RemoveCountSymbols = rcs;
             }
-
         }
         /// <summary>
         /// Действие
