@@ -41,7 +41,7 @@
             this.RunCurrentMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.RunOtherMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
-            this.справкаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.DescriptionMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -82,7 +82,7 @@
             this.файлToolStripMenuItem,
             this.сборкаToolStripMenuItem,
             this.запускToolStripMenuItem,
-            this.справкаToolStripMenuItem});
+            this.DescriptionMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(1245, 38);
@@ -174,12 +174,13 @@
             this.label1.TabIndex = 6;
             this.label1.Text = "Окно вывода";
             // 
-            // справкаToolStripMenuItem
+            // DescriptionMenuItem
             // 
-            this.справкаToolStripMenuItem.ForeColor = System.Drawing.SystemColors.Control;
-            this.справкаToolStripMenuItem.Name = "справкаToolStripMenuItem";
-            this.справкаToolStripMenuItem.Size = new System.Drawing.Size(100, 34);
-            this.справкаToolStripMenuItem.Text = "Справка";
+            this.DescriptionMenuItem.ForeColor = System.Drawing.SystemColors.Control;
+            this.DescriptionMenuItem.Name = "DescriptionMenuItem";
+            this.DescriptionMenuItem.Size = new System.Drawing.Size(100, 34);
+            this.DescriptionMenuItem.Text = "Справка";
+            this.DescriptionMenuItem.Click += new System.EventHandler(this.DescriptionMenuItem_Click);
             // 
             // MainForm
             // 
@@ -217,6 +218,6 @@
         private ToolStripMenuItem RunCurrentMenuItem;
         private ToolStripMenuItem RunOtherMenuItem;
         private Label label1;
-        private ToolStripMenuItem справкаToolStripMenuItem;
+        private ToolStripMenuItem DescriptionMenuItem;
     }
 }
