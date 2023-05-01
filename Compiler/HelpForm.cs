@@ -16,6 +16,14 @@ namespace Compiler
         public HelpForm()
         {
             InitializeComponent();
+
+            treeView1.SelectedNode = treeView1.Nodes[0];
+
+            if (dataBase.description.ContainsKey(treeView1.SelectedNode.Text))
+            {
+                TitleLabel.Text = treeView1.SelectedNode.Text;
+                DescriptionLabel.Text = dataBase.description[treeView1.SelectedNode.Text];
+            }
         }
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)

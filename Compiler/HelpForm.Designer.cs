@@ -44,7 +44,7 @@
             treeNode6,
             treeNode7});
             this.panel1 = new System.Windows.Forms.Panel();
-            this.DescriptionLabel = new System.Windows.Forms.Label();
+            this.DescriptionLabel = new System.Windows.Forms.TextBox();
             this.panel3 = new System.Windows.Forms.Panel();
             this.TitleLabel = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -69,16 +69,17 @@
             // 
             // DescriptionLabel
             // 
-            this.DescriptionLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.DescriptionLabel.Font = new System.Drawing.Font("Yu Gothic UI Light", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.DescriptionLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(93)))), ((int)(((byte)(83)))), ((int)(((byte)(107)))));
+            this.DescriptionLabel.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.DescriptionLabel.Font = new System.Drawing.Font("Yu Gothic UI Light", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.DescriptionLabel.ForeColor = System.Drawing.SystemColors.ControlLight;
-            this.DescriptionLabel.Location = new System.Drawing.Point(25, 87);
+            this.DescriptionLabel.Location = new System.Drawing.Point(25, 83);
+            this.DescriptionLabel.Multiline = true;
             this.DescriptionLabel.Name = "DescriptionLabel";
-            this.DescriptionLabel.Size = new System.Drawing.Size(530, 598);
+            this.DescriptionLabel.ReadOnly = true;
+            this.DescriptionLabel.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.DescriptionLabel.Size = new System.Drawing.Size(530, 603);
             this.DescriptionLabel.TabIndex = 2;
-            this.DescriptionLabel.Text = "Заголовок";
             // 
             // panel3
             // 
@@ -167,8 +168,8 @@
         private Panel panel1;
         private Panel panel2;
         private TreeView treeView1;
-        private Label DescriptionLabel;
         private Panel panel3;
         private Label TitleLabel;
+        private TextBox DescriptionLabel;
     }
 }
