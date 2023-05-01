@@ -165,6 +165,12 @@ namespace Compiler
 
                     if(lexem.Type == "")
                     {
+                        if(lexem.Value == null)
+                        {
+                            CurrentError = "Неизвестная лексическая ошибка";
+                            throw new Exception(CurrentError);
+                        }
+
                         if(lexem.Value.Length > MAX_LENGTH)
                         {
                             Lexem = lexem.Value;

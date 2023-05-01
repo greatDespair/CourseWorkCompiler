@@ -14,5 +14,129 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    background: url(../css/microScheme.jpg);
+    background-size: cover;
+}
+
+.mainFrame {
+    overflow: auto;
+    align-self: center;
+    width: 1300px;
+    height: 910px;
+    background: rgba(203, 203, 203, 0.2);
+
+}
+
+.codeStyle {
+    font-family: 'Microsoft YaHei UI';
+    font-style: normal;
+    font-weight: 300;
+    font-size: 24px;
+    line-height: 24px;
+    color: #330A0A;
+}
+
+#code {
+    width: 1000px;
+    height: 520px;
+    background: #F5F4F4;
+    box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);
+    border-style: none;
+    max-height: 520px;
+    min-height: 300px;
+    max-width: 1000px;
+}
+
+#result {
+    width: 1000px;
+    height: 99px;
+    background: #F5F4F4;
+    box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);
+    border-style: none;
+    max-height: 99px;
+    min-height: 50px;
+    max-width: 1000px;
+}
+
+.buttonStyle {
+    width: 317px;
+    height: 40px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background: #F9F9F9;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 31px;
+    font-family: 'Microsoft YaHei UI';
+    font-style: normal;
+    font-weight: 300;
+    font-size: 20px;
+    line-height: 24px;
+    color: #330A0A;
+    border-style: none;
+}
+
+h1 {
+    text-align: center;
+    font-family: 'HACKED';
+    font-style: normal;
+    font-weight: 300;
+    font-size: 67px;
+    line-height: 81px;
+    color: #330A0A;
+}
+
+.container {
+    font-family: 'Microsoft YaHei UI';
+    font-style: normal;
+    font-weight: 300;
+    font-size: 24px;
+    color: #330A0A;
+    backdrop-filter: blur(5px);
+}
+
+.descriptionMainBlock {
+    overflow: auto;
+    margin:auto;
+    background: #F5F4F4;
+    box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);
+    border-style: none;
+    max-height: 700px;
+    max-width: 1150px;
+}
+
+h2 {
+    font-family: 'Microsoft YaHei UI';
+    font-style: normal;
+    font-weight: 300;
+    font-size: 30px;
+    line-height: 24px;
+    color: #330A0A;
+    margin-left: 40px;
+    font-weight: 400;
+    line-height: 1.2;
+}
+
+.descriptionTextStyle {
+    font-family: 'Microsoft YaHei UI';
+    font-style: normal;
+    font-weight: 300;
+    font-size: 24px;
+    line-height: 24px;
+    margin-left: 20px;
+    margin-right: 20px;
+    color: #330A0A;
+    line-height: 1.2;
+    text-align:justify;
+}
+
+h3 {
+    font-family: 'Microsoft YaHei UI';
+    font-style: normal;
+    font-weight: 300;
+    font-size: 26px;
+    line-height: 24px;
+    color: #330A0A;
+    margin-left: 40px;
+    font-weight: 200;
+    line-height: 1.2;
 }
