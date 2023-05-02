@@ -10,7 +10,7 @@ namespace CompilerWeb.CompilerLib
         public string Compile(string program)
         {
             string result = "";
-            string dateTime = DateTime.Now.ToString(new CultureInfo("ru-RU")) + " >> ";
+            string dateTime = "[" + DateTime.Now.ToString(new CultureInfo("ru-RU")) + "] ";
             if (program == null)
             {
                 result = dateTime + "Исходный код программы отсутствует";
